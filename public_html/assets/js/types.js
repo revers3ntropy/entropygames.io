@@ -1,0 +1,2 @@
+/** @typedef {HTMLElement|string} El */
+

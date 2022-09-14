@@ -1,0 +1,12 @@
+{
+    "type": "module",
+    "dependencies": {
+        "chalk": "^5.0.1",
+        "command-line-args": "^5.2.1",
+        "dotenv": "^16.0.2",
+        "minify": "^9.1.0",
+        "performance-now": "^2.1.0",
+        "try-to-catch": "^3.0.1",
+        "zx": "^7.0.7"
+    }
+}

@@ -1,0 +1,32 @@
+{
+    "scripts": {
+        "docker-build": "docker image build -t house-points-api .",
+        "docker-start": "docker container run --network=host --name=house-points-api-container --restart=always -p 4464:4464 -d house-points-api -v ~/:/app",
+        "start": "docker rm house-points-api-container; npm run docker-build; npm run docker-start",
+        "stop": "docker stop house-points-api-container",
+        "restart": "npm run stop; npm run start",
+        "logs": "docker logs house-points-api-container",
+        "dump-logs": "npm run logs | tee --append server.log",
+        "clear-logs": "truncate -s 0 $(docker inspect --format='{{.LogPath}}' house-points-api-container)",
+        "clear-log-file": "> server.log",
+        "start-local": "cd ..; npm run build-server; cd server; npm run start"
+    },
+    "devDependencies": {
+        "@types/command-line-args": "^5.2.0",
+        "@types/mysql": "^2.15.21",
+        "@types/nodemailer": "^6.4.5",
+        "@types/uuid": "^8.3.4",
+        "cardinal": "^2.1.1",
+        "command-line-args": "^5.2.1",
+        "deep-email-validator": "^0.1.21",
+        "dotenv": "^16.0.0",
+        "email-validator": "^2.0.4",
+        "mysql2": "^2.3.3",
+        "nodemailer": "^6.7.7",
+        "performance-now": "^2.1.0",
+        "ts-loader": "^9.3.1",
+        "uuid": "^8.3.2",
+        "@types/node": "^18.7.16",
+        "mysqldump": "^3.2.0"
+    }
+}

@@ -1,0 +1,25 @@
+{
+    "compilerOptions": {
+        "strict": true,
+        "target": "es2020",
+        "typeRoots": ["node_modules/@types", "./types", "../types"],
+        "types": ["jest", "node"],
+        "lib": ["es2020"],
+        "moduleResolution": "node",
+        "allowJs": true,
+        "esModuleInterop": true,
+        "experimentalDecorators": true,
+        "noEmit": false,
+        "removeComments": true,
+        "forceConsistentCasingInFileNames": true,
+        "noUnusedParameters": true,
+        "noImplicitReturns": true,
+        "noFallthroughCasesInSwitch": true,
+        "noUncheckedIndexedAccess": true,
+        "noImplicitOverride": true,
+        "allowSyntheticDefaultImports": true,
+        "resolveJsonModule": true,
+        "noImplicitThis": true,
+        "skipLibCheck": true
+    }
+}

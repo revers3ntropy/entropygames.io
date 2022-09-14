@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Entropy Script</title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="description" content="Entropy Script - scripting language">
+    <script src="../main.js"></script>
+</head>
+
+<body>
+<nav id="nav"></nav>
+<main>
+    <h1>
+        Entropy Script
+    </h1>
+    <a href="docs" style="font-size: 25px">Documentation</a>
+    <p class="paragraph">
+        Entropy Script is a scripting language designed as a scripting language for game engines, servers and general utility.<br>
+        It uses Node.js or browsers as a runtime. Entropy script is similar to TypeScript, but has runtime type checking and is not compiled. <br>
+    </p>
+
+    <div>
+        <a href="https://github.com/revers3ntropy/entropy-script" class="hover-underline" target=”_blank”>
+            GitHub
+        </a> |
+        <a href="https://www.npmjs.com/package/entropy-script" class="hover-underline" target=”_blank”>
+            NPM package
+        </a>
+    </div>
+
+    Download using NPM:
+    <pre><code>
+        npm install entropy-script -g
+    </code></pre>
+
+    and then use with
+    <pre><code>
+        entropy-script &lt;filename&gt;.es
+    </code></pre>
+
+    <br><Br>
+
+    Try it out in the browser <a href="./run" class="hover-underline">here</a>.
+    <br><br>
+
+
+    Compile to JavaScript with
+    <pre><code>
+        entropy-script -compile &lt;filename&gt;.es out.js
+    </code></pre>
+
+    Compile to Python with
+    <pre><code>
+        entropy-script -compile &lt;filename&gt;.es out.js --python
+    </code></pre>
+
+    Compiling has very limited support at the moment and is still in development.
+
+</main>
+<footer id='footer'></footer>
+</body>
+</html>

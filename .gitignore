@@ -1,0 +1,29 @@
+
+# IDE files
+.idea
+
+# generated files
+node_modules
+*.min
+package-lock.json
+*.js.map
+/server/*index.js
+/test/*index.js
+
+# secrets
+sshPass.*.txt
+*.env
+/dist/api/secrets.php
+
+!structure.env
+
+# data files
+*.csv
+*.xlsx
+
+# logs
+*.txt
+*.log
+
+# specific routes
+/public_html/entropy-script/docs/

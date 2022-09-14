@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="266.171" height="230.131" viewBox="0 0 266.171 230.131">
+    <g id="Group_1" transform="translate(-16.5 -31.465)">
+        <line id="Line_24" x2="119" transform="translate(16.5 41.5)" fill="none" stroke="#000" stroke-width="20"/>
+        <line id="Line_25" x2="119" transform="translate(16.5 146.5)" fill="none" stroke="#000" stroke-width="20"/>
+        <line id="Line_26" x2="119" transform="translate(16.5 251.5)" fill="none" stroke="#000" stroke-width="20"/>
+        <line id="Line_27" x2="46.5" transform="translate(231.5 41.5)" fill="none" stroke="#000" stroke-width="20"/>
+        <line id="Line_29" x1="1.5" y1="157" transform="translate(158.5 104.5)" fill="none" stroke="#000" stroke-width="20"/>
+        <line id="Line_31" x2="68" transform="translate(214.5 144.5)" fill="none" stroke="#000" stroke-width="20"/>
+        <path id="Path_2" d="M642,677.5h82.588s31.642,1.806,31.936-25.675,0-80.552,0-80.552" transform="translate(-484 -426)" fill="none" stroke="#000" stroke-width="20"/>
+        <path id="Path_3" d="M642,677.5h82.588s31.642,1.806,31.936-25.675,0-80.552,0-80.552" transform="translate(915.155 719.024) rotate(180)" fill="none" stroke="#000" stroke-width="20"/>
+    </g>
+</svg>

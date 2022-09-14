@@ -1,0 +1,13 @@
+#!/bin/bash
+
+(
+  cd server || exit;
+  webpack;
+)
+
+(
+  cd test || exit;
+  webpack;
+)
+
+node --enable-source-maps test
