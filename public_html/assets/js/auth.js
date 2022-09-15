@@ -1,6 +1,5 @@
 'use strict';
 import * as core from './main.js';
-import { eraseCookie } from './cookies.js';
 import { api } from './backendAPI.js';
 
 /**

@@ -70,6 +70,8 @@ async function uploadFrontendMinified(dir = '') {
     const paths = fs.readdirSync(p.join(process.env.LOCAL_PATH, dir));
 
     for (const path of paths) {
+        if (path.startsWith('.')) continue;
+
         const filePath = p.join(process.env.LOCAL_PATH, dir, path);
         if (fs.statSync(filePath).isDirectory()) {
             await uploadFrontendMinified(p.join(dir, path));
@@ -94,6 +96,9 @@ async function uploadFrontendMinified(dir = '') {
             fs.writeFileSync(minPath, data);
             await upload(minPath, p.join(process.env.REMOTE_FRONTEND_PATH, dir, path));
             setTimeout(() => fs.rmSync(minPath), 1000);
+
+        } else {
+            await upload(filePath, p.join(process.env.REMOTE_FRONTEND_PATH, dir, path));
         }
     }
 }
@@ -131,7 +136,7 @@ async function uploadBackend() {
     const paths = {
         './server/index.js': '/index.js',
         './server/index.js.map': '/index.js.map',
-        './server/package.json': '/package.json',
+        [`./server/${flags.env}.package.json`]: '/package.json',
         [`./server/${flags.env}.env`]: '/.env',
         [`./server/${flags.env}.Dockerfile`]: '/Dockerfile',
     };

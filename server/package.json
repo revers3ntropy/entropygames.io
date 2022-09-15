@@ -1,13 +1,13 @@
 {
     "scripts": {
-        "docker-build": "docker image build -t house-points-api .",
-        "docker-start": "docker container run --network=host --name=house-points-api-container --restart=always -p 9080:9080 -d house-points-api -v ~/:/app",
-        "start": "docker rm house-points-api-container; npm run docker-build; npm run docker-start",
-        "stop": "docker stop house-points-api-container",
+        "docker-build": "docker image build -t eg-api .",
+        "docker-start": "docker container run --network=host --name=eg-api-container --restart=always -p 9080:9080 -d eg-api -v ~/:/app",
+        "start": "docker rm eg-api-container; npm run docker-build; npm run docker-start",
+        "stop": "docker stop eg-api-container",
         "restart": "npm run stop; npm run start",
-        "logs": "docker logs house-points-api-container",
+        "logs": "docker logs eg-api-container",
         "dump-logs": "npm run logs | tee --append server.log",
-        "clear-logs": "truncate -s 0 $(docker inspect --format='{{.LogPath}}' house-points-api-container)",
+        "clear-logs": "truncate -s 0 $(docker inspect --format='{{.LogPath}}' eg-api-container)",
         "clear-log-file": "> server.log",
         "start-local": "cd ..; npm run build-server; cd server; npm run start"
     },

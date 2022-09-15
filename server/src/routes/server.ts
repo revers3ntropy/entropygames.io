@@ -15,7 +15,7 @@ route('', async () => {
 });
 
 /**
- * Simply returns an {ok: true} message
+ * Simply returns an { ok: true } message
  */
 route('get/server/ping', async () => {});
 
@@ -46,7 +46,7 @@ route('get/server/check', async ({ query, body }) => {
  * Echos the body of the request back
  */
 route('get/server/echo', async ({ body, query }) => {
-    if (!(await isLoggedIn(body, query))) return AUTH_ERR;
+    if (!await isLoggedIn(body, query)) return AUTH_ERR;
 
     return body;
 });

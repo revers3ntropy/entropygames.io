@@ -6,9 +6,7 @@ export const
     COOKIE_SESSION = 'hpnea_SessionId',
     COOKIE_ALLOW_COOKIES_KEY = 'hpnea_AllowedCookies',
     LS_THEME = 'hpnea_Theme',
-    LS_RESERVOIR = 'hpnea_Reservoir',
     HOUSE_NAME = 'Osmond',
-    svgCache = {},
     SPINNER_STOP_DELAY = 300,
     MAX_NOTIFICATIONS = 4,
     NOTIFICATION_SHOW_TIME = 5000;
@@ -36,8 +34,6 @@ export const state = {
     popupStack: [],
 };
 
-reservoir.localStorageKey = LS_RESERVOIR;
-
 // polluting the global namespace
 window.logout = logout;
 window.signInAs = signInAs;
@@ -64,7 +60,6 @@ import {
     domIsLoaded,
     loadFooter,
     loadNav, loadSettings,
-    reloadDOM,
     scrollToTop,
     showError,
     waitForReady
@@ -72,15 +67,11 @@ import {
 import { getSession, handleUserInfo, testApiCon, userInfo, signInAs, logout } from './auth.js';
 import { rawAPI } from './backendAPI.js';
 import { cookiePopUp } from './cookies.js';
-import reservoir from './hydration.js';
 
 export * from './auth.js';
 export * from './backendAPI.js';
 export * from './cookies.js';
 export * from './dom.js';
-export * from './svg.js';
-export * from './popups.js';
-export { reservoir };
 
 (async () => {
     // main function - don't put top-level code anywhere else
