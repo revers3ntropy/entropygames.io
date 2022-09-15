@@ -160,7 +160,7 @@ route('get/server/health', async ({ query, body }) => {
  * This allows the server to close any connections and shutdown gracefully
  */
 route('delete/server', async ({ query, body }) => {
-    if (!(await isAdmin(body, query))) return AUTH_ERR;
+    if (!await isAdmin(body, query)) return AUTH_ERR;
 
     process.kill(process.pid, 'SIGTERM');
 });

@@ -226,16 +226,13 @@ export async function userFromId(
         SELECT
             id,
             email,
-            year,
-            admin,
-            student
+            name,
+            admin
         FROM users
         WHERE id = ${id}
     `;
 
     if (!res[0]) return null;
-
-    await addHousePointsToUser(query, res[0]);
 
     return res[0];
 }
@@ -254,9 +251,8 @@ export async function userFromSession(
         SELECT
             users.id,
             users.email,
-            users.year,
-            users.admin,
-            users.student
+            users.name,
+            users.admin
         FROM users, sessions
         WHERE
             sessions.userId = users.id
@@ -267,137 +263,5 @@ export async function userFromSession(
 
     if (!res[0]) return null;
 
-    await addHousePointsToUser(query, res[0]);
-
     return res[0];
-}
-
-/**
- * Adds house point details to a user
- * Adds 'housePoints', 'accepted', 'rejected', 'pending' keys to the user object.
- * Assumed admin level authentication, censor the data after if necessary.
- */
-export async function addHousePointsToUser(query: queryFunc, user: any & { id: string }) {
-    if (!user['id'] || typeof user.id !== 'string') {
-        throw new Error('Invalid user ID: ' + user.id);
-    }
-
-    user['housePoints'] = await query`
-        SELECT
-            housepoints.id,
-            housepoints.quantity,
-            housepoints.description,
-            housepoints.status,
-            UNIX_TIMESTAMP(housepoints.created) as created,
-            UNIX_TIMESTAMP(housepoints.completed) as completed,
-            housepoints.rejectMessage,
-            
-            users.id as userId,
-            users.email as userEmail,
-            users.year as userYear,
-            
-            housepoints.eventId as eventId,
-            events.name as eventName,
-            events.description as eventDescription,
-            UNIX_TIMESTAMP(events.time) as eventTime
-            
-        FROM users, housepoints
-        LEFT JOIN events
-        ON events.id = housepoints.eventId
-        
-        WHERE
-            housepoints.userId = users.id
-            AND users.id = ${user['id']}
-       ORDER BY created DESC
-    `;
-    
-    user['awards'] = await query`
-        SELECT
-            awards.id,
-            UNIX_TIMESTAMP(awards.awarded) as awarded,
-            awards.description,
-            
-            awardTypes.id as awardTypeId,
-            awardTypes.name as awardTypeName,
-            awardTypes.description as awardTypeDescription,
-            awardTypes.hpsRequired as awardRequirement,
-            awardTypes.icon as icon,
-            
-            users.id as userId,
-            users.email as userEmail,
-            users.year as userYear
-            
-        FROM users, awards, awardTypes
-        
-        WHERE
-            awards.userId = users.id
-            AND awards.awardTypeId = awardTypes.id
-            AND users.id = ${user['id']}
-       ORDER BY awarded DESC
-    `;
-
-    // add the quick count stats
-    user['accepted'] ??= user['housePoints'].reduce(
-        (acc: number, hp: any) => acc + (hp['status'] === 'Accepted' ? hp['quantity'] : 0),
-        0
-    );
-
-    user['pending'] ??= user['housePoints'].reduce(
-        (acc: number, hp: any) => acc + (hp['status'] === 'Pending' ? hp['quantity'] : 0),
-        0
-    );
-
-    user['rejected'] ??= user['housePoints'].reduce(
-        (acc: number, hp: any) => acc + (hp['status'] === 'Rejected' ? hp['quantity'] : 0),
-        0
-    );
-
-    // user passed by reference as it's an object so don't need to return anything
-}
-
-/**
- * Adds house point details to a user
- * Adds 'housePoints', 'accepted', 'rejected', 'pending' keys to the user object.
- * Assumed admin level authentication, censor the data after if necessary.
- */
-export async function addHousePointsToEvent(query: queryFunc, event: any & { id: string }) {
-    if (!event['id']) {
-        throw new Error('User has no Id');
-    }
-
-    event['housePoints'] = await query`
-        SELECT
-            housepoints.id,
-            housepoints.quantity,
-            housepoints.description,
-            housepoints.status,
-            UNIX_TIMESTAMP(housepoints.created) as created,
-            UNIX_TIMESTAMP(housepoints.completed) as completed,
-            housepoints.rejectMessage,
-            
-            users.id as userId,
-            users.email as userEmail,
-            users.year as userYear,
-            
-            housepoints.eventId as eventId,
-            events.name as eventName,
-            events.description as eventDescription,
-            UNIX_TIMESTAMP(events.time) as eventTime
-            
-        FROM users, housepoints
-        LEFT JOIN events
-        ON events.id = housepoints.eventId
-        
-        WHERE
-            housepoints.userId = users.id
-            AND events.id = ${event['id']}
-       ORDER BY created DESC
-    `;
-
-    event['housePointCount'] = event['housePoints'].reduce(
-        (acc: any, cur: any) => acc + cur['quantity'],
-        0
-    );
-
-    // event passed by reference as it's an object so don't need to return anything
 }

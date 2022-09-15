@@ -58,7 +58,10 @@ export default function route(path: string, handler: Handler) {
     }
 }
 
+import './routes/backups';
 import './routes/server';
+import './routes/sessions';
+import './routes/users';
 
 function startServer() {
     let options = {};
