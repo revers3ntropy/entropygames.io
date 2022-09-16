@@ -1,6 +1,6 @@
 {
     "dependencies": {
         "entropy-script": "^3.0.6",
-        "hydrate-web": "^0.0.5"
+        "hydrate-web": "^0.0.6"
     }
 }

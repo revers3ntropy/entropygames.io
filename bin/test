@@ -2,12 +2,12 @@
 
 (
   cd server || exit;
-  webpack;
+  npx webpack-cli;
 )
 
 (
   cd test || exit;
-  webpack;
+  npx webpack-cli;
 )
 
 node --enable-source-maps test

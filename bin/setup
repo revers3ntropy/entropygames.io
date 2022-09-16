@@ -1,0 +1,30 @@
+#!/bin/bash
+
+if [ ! -f .env ]
+then
+  export $(cat ./server/.env | xargs)
+fi
+
+(
+	cd bin;
+	npm i;
+) &
+(
+	cd test;
+	npm i;
+) &
+(
+	cd public_html/cdn;
+	npm i;
+) &
+(
+	cd server;
+	npm i;
+) & wait
+
+mysql -u root << eof
+    DROP DATABASE IF EXISTS entropygames_dev;
+    CREATE DATABASE entropygames_dev
+eof
+
+mysql -u root entropygames_dev < ./sql/schema.sql

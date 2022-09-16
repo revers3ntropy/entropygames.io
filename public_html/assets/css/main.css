@@ -33,7 +33,7 @@ body:not([data-theme]) {
     --label-text: #000000;
     --label-border: #e0e0e0;
 
-    --nav-border-bottom: #076207;
+    --nav-border-bottom: transparent;
 
     --text: #ffffff;
     --bg-accent: #505050;
@@ -53,7 +53,7 @@ body:not([data-theme]) {
     --bg: #eeeeee;
     --bg-accent: white;
     --accent: #15cb15;
-    --nav-border-bottom: #15cb15;
+    --nav-border-bottom: transparent;
 
     --text-warning: red;
 
@@ -84,7 +84,6 @@ body:not([data-theme]) {
 ::-webkit-scrollbar-thumb:hover {
     background: var(--text-color);
 }
-
 
 
 /* -------------------------------------------------- STRUCTURE ---------------------------------------------------- */
@@ -374,14 +373,7 @@ footer {
     justify-content: center;
     align-items: center;
     text-align: center;
-}
-
-
-footer {
     background-color: var(--light-bg);
-    height: 100px;
-    margin: 0;
-    display: grid;
     place-items: center;
 }
 

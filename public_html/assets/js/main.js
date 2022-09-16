@@ -1,11 +1,13 @@
 'use strict';
 // Utility script imported by all pages
-
 import '../../cdn/node_modules/hydrate-web/index.js';
+
+window.R = window.reservoir;
 
 // Global constants and variables
 export const
     LS_THEME = 'theme',
+    LS_SESSION = 'session',
     SPINNER_STOP_DELAY = 300,
     MAX_NOTIFICATIONS = 4,
     NOTIFICATION_SHOW_TIME = 5000;
@@ -131,10 +133,9 @@ export async function init(
     
     // after made sure that the user has the right permissions,
     // load the rest of the page
-    reservoir.loadFromLocalStorage(false);
-    reservoir.set(
+    R.loadFromLocalStorage(false);
+    R.set(
         {
-            houseName: HOUSE_NAME,
             rootPath,
             user: state.userInfoJSON,
             signedIn: state.isSignedIn,
@@ -150,18 +151,10 @@ export async function init(
     state.$nav = document.querySelector(`nav`);
     state.$footer = document.querySelector(`footer`);
 
-    if (state.$nav) {
-        await loadNav();
-    }
-    if (state.$footer) {
-        await loadFooter();
-    }
+    await loadNav(state.$nav);
+    await loadFooter(state.$footer);
     
     loadSettings();
-
-    cookiePopUp();
-
-    reloadDOM();
 
     scrollToTop();
 

@@ -1,6 +1,7 @@
 'use strict';
 import * as core from './main.js';
 import { api } from './backendAPI.js';
+import { LS_SESSION } from './main.js';
 
 /**
  * Caches the user info
@@ -25,11 +26,11 @@ export async function handleUserInfo(info) {
 
 // user auth cookie utilities
 export function getSession() {
-    return core.getCookie(core.COOKIE_SESSION);
+    return localStorage.getItem(LS_SESSION);
 }
 
-export async function setSessionCookie(id) {
-    return await core.setCookie(core.COOKIE_SESSION, id);
+export async function setSession(id) {
+    return localStorage.set(core.LS_SESSION, id);
 }
 
 /**
@@ -110,8 +111,8 @@ export async function logout() {
  * @returns {Promise<void>}
  */
 export async function logoutAction() {
-    await eraseCookie(core.COOKIE_SESSION);
-    core.reservoir.set({
+    await localStorage.removeItem(core.LS_SESSION);
+    reservoir.set({
         'user': null,
         'signedIn': false
     },true);
@@ -163,7 +164,7 @@ export async function signInAs(id, email) {
         return;
     }
 
-    await setSessionCookie(sessionId);
+    await setSession(sessionId);
     await core.navigate(`/user/?email=${email}`);
 }
 

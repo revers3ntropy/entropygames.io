@@ -13,12 +13,14 @@ export interface IFlags {
     dbLogLevel: number;
     logTo: string;
     port: number;
+    env: string;
 }
 
 export const flags = {
     logLevel: LogLvl.INFO,
     dbLogLevel: LogLvl.WARN,
     port: 0,
+    env: '.env',
     ...commandLineArgs([
         {
             name: 'logLevel',
@@ -29,6 +31,7 @@ export const flags = {
             type: Number,
         },
         { name: 'logTo', type: String },
+        { name: 'env', type: String },
         {
             name: 'port',
             alias: 'p',
@@ -124,7 +127,7 @@ function connectToMySQL() {
 }
 
 (async () => {
-    loadEnv();
+    loadEnv(flags.env);
     setupLogger(flags as IFlags);
     connectToMySQL();
     startServer();

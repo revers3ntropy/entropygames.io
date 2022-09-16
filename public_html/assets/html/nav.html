@@ -1,12 +1,12 @@
 <div class="nav-left">
-    <a href="https://entropygames.io" class="icon-link">
-        <img src="https://entropygames.io/assets/logo.svg?x=1" alt="logo" width="50px" height="50px">
+    <a pump.href="${console.log(SITE_ROOT),SITE_ROOT}" class="icon-link">
+        <img src="http://cdn.entropygames.io/icon/entropy-games-dark.png" alt="logo" width="50px" height="50px">
     </a>
 </div>
 
 <div class="nav-center">
-    <a href="https://entropygames.io/entropy-engine">ENTROPY ENGINE</a>
-    <a href="https://entropygames.io/entropy-script">ENTROPY SCRIPT</a>
+    <a href="/entropy-engine">ENTROPY ENGINE</a>
+    <a href="/entropy-script">ENTROPY SCRIPT</a>
 </div>
 
 <div class="nav-right">
@@ -16,16 +16,16 @@
 <style>
 
     nav {
+        display: grid;
         justify-content: space-between;
         align-items: center;
+        grid-template-columns: 1fr 1fr 1fr;
         padding: 0 5px;
         background: var(--nav-colour);
         height: var(--nav-height);
-        width: calc(100% - 10px);
+        width: 100%;
         border-bottom: 2px solid var(--nav-border-bottom);
         margin-bottom: 15px;
-        box-shadow: 0 0 5px 5px rgba(0, 0, 0, 1);
-        display: grid;
     }
 
     nav * {
@@ -46,7 +46,8 @@
         color: var(--text-lighter);
     }
     .nav-left,
-    .nav-right {
+    .nav-right,
+    .nav-center {
         min-width: 50px;
         width: fit-content;
         display: flex;
@@ -54,7 +55,7 @@
         align-items: center;
     }
     .nav-left > *,
-    .nav-right > *{
+    .nav-right > * {
         padding: 0 5px;
     }
 
@@ -86,10 +87,5 @@
         grid-template-columns: 40px 1fr;
         align-items: center;
         cursor: pointer;
-    }
-
-    /* to stop the page expanding to the right when hovered */
-    #nav-right > *:last-child {
-        transform: translate(-5px, -2px);
     }
 </style>

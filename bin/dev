@@ -1,16 +1,18 @@
 #!/bin/bash
 
-npm i -g http-server;
+bin/kill-server;
+bin/kill-server 8000;
+
+if [ "$1" = "down" ]; then
+  exit;
+fi
 
 # start the development server
 (
   cd server || exit;
-  webpack;
+  npx webpack-cli;
 );
 
-bin/kill-server;
-bin/kill-server 8000;
+node --enable-source-maps server --logTo=dev.log --logLevel=4 --dbLogLevel=2 --env=dev.env & # start the server in the background
 
-node --enable-source-maps server --logTo=dev.log --logLevel=4 --dbLogLevel=2 & # start the server in the background
-
-http-server ./public_html -p 8000 -a localhost -c-1 &
+npx http-server ./public_html -p 8000 -a localhost -c-1 &

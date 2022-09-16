@@ -75,7 +75,8 @@ export async function waitForReady() {
  * Loads the footer into the <footer> element
  * @returns {Promise<void>}
  */
-export async function loadFooter() {
+export async function loadFooter($footer) {
+    if (!$footer) return;
     const footerHTMLRes = await fetch(
         `${core.ROOT_PATH}/assets/html/footer.html`
     );
@@ -87,19 +88,16 @@ export async function loadFooter() {
  * and updates it with the current user's info
  * @returns {Promise<void>}
  */
-export async function loadNav() {
+export async function loadNav($nav) {
+    if (!$nav) return;
+
     const navRes = await fetch(`${core.ROOT_PATH}/assets/html/nav.html`);
-    console.log(state.$nav, await navRes.text())
-    state.$nav.innerHTML = await navRes.text();
+    $nav.innerHTML = await navRes.text();
 
     // replace links in nav relative to this page
     document.querySelectorAll('nav a').forEach(a => {
         a.setAttribute('href', `${core.ROOT_PATH}${a.getAttribute('href')}`);
     });
-
-    const user = await core.userInfo();
-
-    if (!user) return;
 }
 
 export async function domIsLoaded() {
@@ -157,12 +155,12 @@ export function loadSettings() {
     settingsButton.classList.add('icon');
     settingsButton.setAttribute('svg', 'settings.svg');
 
-    core.reservoir.set({
+    R.set({
         switchTheme: () => {
             core.setTheme(core.getInverseTheme());
             const svg =
                 getTheme() === 'light' ? 'light-theme.svg' : 'dark-theme.svg';
-            core.reservoir.set('themeButtonSVG', svg);
+            R.set('themeButtonSVG', svg);
         },
         themeButtonSVG: 'light-theme.svg',
     });

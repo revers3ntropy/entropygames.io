@@ -2,6 +2,6 @@
 
 (
   cd server || exit
-  webpack
+  npx webpack-cli;
 )
 node --enable-source-maps server --logTo=test.log --logLevel=4 --dbLogLevel=4
