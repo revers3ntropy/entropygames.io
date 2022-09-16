@@ -1,5 +1,7 @@
-@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300&family=Quicksand&family=Raleway:wght@200&family=Roboto:wght@300&family=Saira:wght@200&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300&family=Quicksand&family=Raleway:wght@200&family=Roboto:wght@300&family=Saira:wght@200&display=swap&family=Lato:wght@300&family=Roboto:wght@100&family=Roboto+Mono:wght@100&family=Josefin+Sans:wght@100&display=swap');
 @import url('./components.css');
+@import url('../lib/semantic/semantic.min.css');
+@import url('../../cdn/node_modules/hydrate-web/index.css');
 /* -------------------------------------------------- GENERAL ---------------------------------------------------- */
 
 /*
@@ -9,6 +11,15 @@
  */
 body:not([data-theme]) {
     --bg: #838383;
+}
+
+:root {
+    --nav-height: 70px;
+    --anim-speed: 150ms;
+    --anim-slow: 300ms;
+    --anim-really-slow: 600ms;
+
+    --nav-colour: transparent;
 }
 
 /*
@@ -22,24 +33,23 @@ body:not([data-theme]) {
     --label-text: #000000;
     --label-border: #e0e0e0;
 
-    --nav-height: 70px;
-
     --nav-border-bottom: #076207;
 
     --text: #ffffff;
-    --nav-colour: #494949;
-    --text-light: #dedede;
-    --bg: #343434;
     --bg-accent: #505050;
     --accent: #076207;
     --text-warning: #ff8d8d;
     --border: #646464;
     --border-light: #545454;
+
+    --bg: rgb(30, 30, 30);
+    --light-bg: #2a2a2a;
+    --text-color: rgb(255, 255, 255);
+    --text-light: rgb(227, 227, 227);
+    --text-lighter: rgb(208, 208, 208);
 }
 
 [data-theme='light'] {
-    --nav-colour: var(--bg);
-
     --bg: #eeeeee;
     --bg-accent: white;
     --accent: #15cb15;
@@ -55,30 +65,27 @@ body:not([data-theme]) {
 }
 
 * {
-    transition: 200ms;
+    color: var(--text-color);
+    font-family: 'Lato', sans-serif;
+    transition: var(--anim-speed);
 }
 
-/* -------------------------------------------------- RESERVOIR ---------------------------------------------------- */
-
-/*
-    Only hide when the component is a for loop and has not been initialised yet
- */
-[foreach]:not([foreach-dry]) {
-    display: none !important;
+/* scrollbar */
+::-webkit-scrollbar {
+    width: 10px;
 }
 
-/*
-    This won't interfere with the element's display as the hidden attribute is
-    only present on elements which are either yet to be parsed, or have been parsed
-    and decided that they should be hidden.
-*/
-[hidden] {
-    display: none !important;
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+::-webkit-scrollbar-thumb {
+    background: var(--text-lighter);
+}
+::-webkit-scrollbar-thumb:hover {
+    background: var(--text-color);
 }
 
-.reservoir-container {
-    display: contents;
-}
+
 
 /* -------------------------------------------------- STRUCTURE ---------------------------------------------------- */
 
@@ -98,6 +105,7 @@ html,
 body,
 main {
     margin: 0;
+    min-height: calc(100% - var(--nav-height));
 }
 
 .flex-center {
@@ -368,68 +376,73 @@ footer {
     text-align: center;
 }
 
-nav {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 5px;
-    background: var(--nav-colour);
-    height: var(--nav-height);
-    width: calc(100% - 10px);
-    border-bottom: 2px solid var(--nav-border-bottom);
-}
 
-#nav-left,
-#nav-right {
-    min-width: 50px;
-    width: fit-content;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-#nav-left > *,
-#nav-right > *{
-    padding: 0 5px;
-}
-
-#home-link {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: fit-content;
-}
-
-.nav-item {
-    position: relative;
-    display: inline-block;
-}
-
-.nav-item .nav-item-dropdown {
-    display: none;
-    position: absolute;
-    background-color: #f9f9f9;
-    width: 200px;
-    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
-    padding: 12px 16px;
-    z-index: 2;
-    background: var(--bg-accent);
-}
-
-.nav-item:hover .nav-item-dropdown {
-    display: block;
-}
-
-.nav-item .nav-item-dropdown > * {
-    width: 100%;
-    background: transparent;
+footer {
+    background-color: var(--light-bg);
+    height: 100px;
+    margin: 0;
     display: grid;
-    /* assumed one svg icon and then text */
-    grid-template-columns: 40px 1fr;
-    align-items: center;
-    cursor: pointer;
+    place-items: center;
 }
 
-/* to stop the page expanding to the right when hovered */
-#nav-right > *:last-child {
-    transform: translate(-5px, -2px);
+.icon-link {
+    padding: 0 5px;
+    margin: 0;
+    background: none;
 }
+
+.icon-link:hover {
+    background: none;
+}
+
+.icon-link:hover img {
+    transform: scale(0.9);
+}
+
+input, textarea {
+    background-color: var(--light-bg);
+}
+
+/*-- CODE --*/
+pre code {
+    font-family: 'Roboto Mono', monospace;
+    margin: 8px;
+    background: var(--light-bg);
+    border-radius: 10px;
+    display: block;
+    border: none;
+}
+
+/*-- TEXT --*/
+h1 {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 60px;
+}
+
+.paragraph {
+    text-align: left;
+    padding-left: 10vw;
+    font-size: 18px;
+}
+
+/* this will probably break at some point... not really sure what I am doing here */
+:not(nav) > * > a {
+    color: var(--text-light);
+    text-decoration: none;
+    transition: var(--anim-speed);
+    padding: 2px;
+}
+
+:not(nav) > * > a:hover {
+    color: var(--text-lighter);
+}
+
+button {
+    background: var(--light-bg);
+    border: var(--text-lighter);
+}
+button:hover {
+    background: var(--light-bg);
+    border: var(--text-lighter);
+}
+

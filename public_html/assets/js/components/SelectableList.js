@@ -1,5 +1,4 @@
 'use strict';
-import { registerComponent } from '../dom.js';
 import * as core from '../main.js';
 
 /**
@@ -21,7 +20,7 @@ import * as core from '../main.js';
 
  * @returns {{ reload: () => void }}
  */
-export default registerComponent(
+export default reservoir.Component(
     'SelectableList',
     (
         $el,

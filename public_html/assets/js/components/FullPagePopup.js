@@ -1,5 +1,4 @@
 'use strict';
-import { registerComponent } from '../dom.js';
 import * as core from '../main.js';
 
 /**
@@ -9,7 +8,7 @@ import * as core from '../main.js';
  * @param {string} content
  * @param {string} title
  */
-export default registerComponent('FullPagePopup', ($el, id, content, title = ' ') => {
+export default reservoir.Component('full-page-popup', ({ $el, id, content, title = ' ' }) => {
     const $p = document.createElement('div');
     $p.classList.add('full-page-popup');
     $p.id = `full-page-popup-${id}`;

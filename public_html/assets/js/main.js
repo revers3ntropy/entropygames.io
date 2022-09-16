@@ -1,12 +1,11 @@
 'use strict';
 // Utility script imported by all pages
 
+import '../../cdn/node_modules/hydrate-web/index.js';
+
 // Global constants and variables
 export const
-    COOKIE_SESSION = 'hpnea_SessionId',
-    COOKIE_ALLOW_COOKIES_KEY = 'hpnea_AllowedCookies',
-    LS_THEME = 'hpnea_Theme',
-    HOUSE_NAME = 'Osmond',
+    LS_THEME = 'theme',
     SPINNER_STOP_DELAY = 300,
     MAX_NOTIFICATIONS = 4,
     NOTIFICATION_SHOW_TIME = 5000;
@@ -66,11 +65,9 @@ import {
 } from "./dom.js";
 import { getSession, handleUserInfo, testApiCon, userInfo, signInAs, logout } from './auth.js';
 import { rawAPI } from './backendAPI.js';
-import { cookiePopUp } from './cookies.js';
 
 export * from './auth.js';
 export * from './backendAPI.js';
-export * from './cookies.js';
 export * from './dom.js';
 
 (async () => {

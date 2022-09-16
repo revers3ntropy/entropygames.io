@@ -1,6 +1,4 @@
 import * as core from './main.js';
-import reservoir from './hydration.js';
-import { getComponentId } from './componentIdx.js';
 import FullPagePopup from './components/FullPagePopup.js';
 
 /**
@@ -91,6 +89,7 @@ export async function loadFooter() {
  */
 export async function loadNav() {
     const navRes = await fetch(`${core.ROOT_PATH}/assets/html/nav.html`);
+    console.log(state.$nav, await navRes.text())
     state.$nav.innerHTML = await navRes.text();
 
     // replace links in nav relative to this page

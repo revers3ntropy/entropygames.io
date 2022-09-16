@@ -12,3 +12,84 @@
 <div class="nav-right">
 
 </div>
+
+<style>
+
+    nav {
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 5px;
+        background: var(--nav-colour);
+        height: var(--nav-height);
+        width: calc(100% - 10px);
+        border-bottom: 2px solid var(--nav-border-bottom);
+        margin-bottom: 15px;
+        box-shadow: 0 0 5px 5px rgba(0, 0, 0, 1);
+        display: grid;
+    }
+
+    nav * {
+        max-height: var(--nav-height);
+    }
+
+    nav a {
+        display: flex;
+        align-items: center;
+        text-align: center;
+        text-decoration: none;
+        height: 100%;
+        padding: 4px;
+        margin: 0 16px;
+    }
+
+    nav a:hover {
+        color: var(--text-lighter);
+    }
+    .nav-left,
+    .nav-right {
+        min-width: 50px;
+        width: fit-content;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .nav-left > *,
+    .nav-right > *{
+        padding: 0 5px;
+    }
+
+    .nav-item {
+        position: relative;
+        display: inline-block;
+    }
+
+    .nav-item .nav-item-dropdown {
+        display: none;
+        position: absolute;
+        background-color: #f9f9f9;
+        width: 200px;
+        box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+        padding: 12px 16px;
+        z-index: 2;
+        background: var(--bg-accent);
+    }
+
+    .nav-item:hover .nav-item-dropdown {
+        display: block;
+    }
+
+    .nav-item .nav-item-dropdown > * {
+        width: 100%;
+        background: transparent;
+        display: grid;
+        /* assumed one svg icon and then text */
+        grid-template-columns: 40px 1fr;
+        align-items: center;
+        cursor: pointer;
+    }
+
+    /* to stop the page expanding to the right when hovered */
+    #nav-right > *:last-child {
+        transform: translate(-5px, -2px);
+    }
+</style>
