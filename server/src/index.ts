@@ -69,9 +69,13 @@ import './routes/users';
 function startServer() {
     let options = {};
     if (process.env.PROD === '1') {
+        if (!process.env.PRIVATE_KEY_PATH || !process.env.CERTIFICATE_PATH) {
+            log.error`Missing PRIVATE_KEY_PATH or CERTIFICATE_PATH environment variables.`;
+            return;
+        }
         options = {
-            key: fs.readFileSync('./privatekey.pem'),
-            cert: fs.readFileSync('./certificate.pem'),
+            key: fs.readFileSync(process.env.PRIVATE_KEY_PATH),
+            cert: fs.readFileSync(process.env.CERTIFICATE_PATH),
         };
     }
 
@@ -102,14 +106,18 @@ function startServer() {
         await requestHandler(req, res, query, handlers);
     }
 
-    if (process.env.PROD !== '1') {
-        server = http.createServer(options, handle).listen(port, () => {
-            log.log(c.green(`Dev server started on port ${port}`));
-        });
-    } else {
-        server = https.createServer(options, handle).listen(port, () => {
-            log.log(c.green(`Production server started on port ${port}`));
-        });
+    try {
+        if (process.env.PROD !== '1') {
+            server = http.createServer(options, handle).listen(port, () => {
+                log.log(c.green(`Dev server started on port ${port}`));
+            });
+        } else {
+            server = https.createServer(options, handle).listen(port, () => {
+                log.log(c.green(`Production server started on port ${port}`));
+            });
+        }
+    } catch (e) {
+        log.error(`Error starting server: ${e}`);
     }
 
     process.on('SIGTERM', () => {
@@ -127,8 +135,12 @@ function connectToMySQL() {
 }
 
 (async () => {
+
+    console.log('Starting server...');
+
     loadEnv(flags.env);
     setupLogger(flags as IFlags);
     connectToMySQL();
     startServer();
+    await log.logToDB('Server started', 'server');
 })();

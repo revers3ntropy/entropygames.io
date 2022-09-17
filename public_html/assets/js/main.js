@@ -15,7 +15,8 @@ export const
 // should be const but is set once at the start of the script
 export let
     ROOT_PATH = '',
-    API_ROOT = 'https://josephcoppin.com/school/house-points/api';
+    API_ROOT = 'https://api.entropygames.io',
+    ENV = 'prod';
 
 export const state = {
     $nav: null,
@@ -81,6 +82,19 @@ export * from './dom.js';
     }
 })();
 
+function detectEnv () {
+    const url = new URL(window.location.href);
+    if (url.hostname === 'localhost') {
+        ENV = 'dev';
+    } else if (url.hostname === 'entropygames.io') {
+        ENV = 'prod';
+    } else if (url.hostname === 'staging.entropygames.io') {
+        ENV = 'staging';
+    } else {
+        ENV = 'test';
+    }
+}
+
 /**
  * Must be called first
  * @param {string} rootPath path to root of site
@@ -97,7 +111,22 @@ export async function init(
     const start = performance.now();
 
     ROOT_PATH = rootPath;
-    //API_ROOT = `${rootPath}/api`;
+
+    detectEnv();
+
+    switch (ENV) {
+        case 'dev':
+            API_ROOT = 'http://localhost:9080/';
+            break;
+        case 'prod':
+            API_ROOT = 'https://api.entropygames.io/?';
+            break;
+        case 'staging':
+            API_ROOT = 'https://api-staging.entropygames.io/?';
+            break;
+        default:
+            throw 'unknown environment';
+    }
 
     if (!noApiTest) {
         await testApiCon();

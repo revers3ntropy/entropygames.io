@@ -18,7 +18,7 @@ async function startServer(_: CommandLineOptions): Promise<void> {
             t = now();
 
             exec(
-                `node --enable-source-maps server --logTo=test.log --logLevel=4 --dbLogLevel=2`,
+                `bin/kill-server 9081; sleep .2; node --enable-source-maps server --logTo=test.log --logLevel=4 --dbLogLevel=2 --env=test.env`,
                 (err, _, er) => {
                     if (err) reject(err);
                     if (er) reject(er);
@@ -35,7 +35,7 @@ async function startServer(_: CommandLineOptions): Promise<void> {
 
 export default async function setup(flags: CommandLineOptions): Promise<void> {
     // setup environment variables
-    config({ path: './server/.env' });
+    config({ path: './server/test.env' });
 
     await startServer(flags);
 

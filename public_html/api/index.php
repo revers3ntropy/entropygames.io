@@ -1,21 +1,17 @@
 <?php
-
-const PORT = 8090;
-const HOST = 'https://127.0.0.1';
-
 /* For debugging:
 mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 ini_set('display_errors', true);
 error_reporting(E_ALL);
 //*/
+require_once 'loadenv.php';
+
+use Env\DotEnv;
+
+(new DotEnv(__DIR__ . '/.env'))->load();
 
 $start = floor(microtime(true) * 1000);
 
-// Use the raw string over a $_GET param to avoid auto-decoding of URI parameter
-// this method is not very good though, meaning no GET parameters can be stripped from the request,
-// but makes everything easier with escaping stuff
-// which does work at the moment
-// (Note last parameter is doing only first occurrence, so must return array of length 1 or 2)
 $uri_parts = explode("?", $_SERVER['REQUEST_URI'], 2);
 
 $api_uri = '';
@@ -26,7 +22,7 @@ if (count($uri_parts) == 2) {
 	die(json_encode(array('error' => "Invalid API request format, must have '?' followed by API route")));
 }
 
-$url = HOST.':'.PORT.'/'.$api_uri;
+$url = getenv('HOST').':'.getenv('PORT').'/'.$api_uri;
 
 $ch = curl_init();
 

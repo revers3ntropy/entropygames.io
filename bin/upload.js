@@ -59,6 +59,8 @@ const MINIFY_OPTIONS = {
 };
 
 async function upload(localPath, remotePath, args = '') {
+    // console.log(`sshpass -f '${process.env.SSH_PASS_FILE}' rsync ${args.split(
+    //     ' ')} ${localPath} ${process.env.REMOTE_ADDRESS}:~${remotePath}`);
     return await $`sshpass -f '${process.env.SSH_PASS_FILE}' rsync ${args.split(
         ' ')} ${localPath} ${process.env.REMOTE_ADDRESS}:~${remotePath}`;
 }
@@ -74,7 +76,8 @@ async function uploadFrontendMinified(dir = '') {
 
         const filePath = p.join(process.env.LOCAL_PATH, dir, path);
         if (fs.statSync(filePath).isDirectory()) {
-            await uploadFrontendMinified(p.join(dir, path));
+            await upload(filePath, p.join(process.env.REMOTE_FRONTEND_PATH, dir), '-r')
+                .then(() => uploadFrontendMinified(p.join(dir, path)));
             continue;
         }
 
@@ -94,11 +97,12 @@ async function uploadFrontendMinified(dir = '') {
             }
             const minPath = filePath + '.min';
             fs.writeFileSync(minPath, data);
-            await upload(minPath, p.join(process.env.REMOTE_FRONTEND_PATH, dir, path));
-            setTimeout(() => fs.rmSync(minPath), 1000);
+            await upload(minPath, p.join(process.env.REMOTE_FRONTEND_PATH, dir, path)).then(() => {
+                setTimeout(() => fs.rmSync(minPath), 1000);
+            });
 
         } else {
-            await upload(filePath, p.join(process.env.REMOTE_FRONTEND_PATH, dir, path));
+            await upload(filePath, p.join(process.env.REMOTE_FRONTEND_PATH, dir, path)).then();
         }
     }
 }
@@ -157,6 +161,8 @@ async function uploadBackend() {
     dotenv.config({ path: `./${flags.env}.env` });
 
     console.log(c.green('Uploading to ' + process.env.REMOTE_ADDRESS));
+
+    await uploadBackend();
     
     if (!flags.noFront) {
         if (!flags.minify) {
@@ -166,8 +172,6 @@ async function uploadBackend() {
             await uploadFrontendMinified();
         }
     }
-
-    await uploadBackend();
 
     const duration = (now() - start) / 1000;
     console.log(c.green(`Finished Uploading in ${duration.toFixed(3)}s`));

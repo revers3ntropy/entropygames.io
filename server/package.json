@@ -14,6 +14,7 @@
     "devDependencies": {
         "@types/command-line-args": "^5.2.0",
         "@types/mysql": "^2.15.21",
+        "@types/node": "^18.7.16",
         "@types/nodemailer": "^6.4.5",
         "@types/uuid": "^8.3.4",
         "cardinal": "^2.1.1",
@@ -22,11 +23,13 @@
         "dotenv": "^16.0.0",
         "email-validator": "^2.0.4",
         "mysql2": "^2.3.3",
+        "mysqldump": "^3.2.0",
         "nodemailer": "^6.7.7",
         "performance-now": "^2.1.0",
         "ts-loader": "^9.3.1",
-        "uuid": "^8.3.2",
-        "@types/node": "^18.7.16",
-        "mysqldump": "^3.2.0"
+        "uuid": "^8.3.2"
+    },
+    "dependencies": {
+        "yaml": "^2.1.1"
     }
 }

@@ -12,12 +12,12 @@ die () {
 (
   cd server || exit;
   webpack;
-)
+) &
 
 (
   cd test || exit;
   webpack;
-)
+) & wait;
 
 node --enable-source-maps test -v --deploy "${@: -1}"
 

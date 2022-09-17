@@ -1,7 +1,7 @@
 'use strict';
 import * as core from './main.js';
 import { api } from './backendAPI.js';
-import { LS_SESSION } from './main.js';
+import { LS_SESSION, showErrorFromCode } from './main.js';
 
 /**
  * Caches the user info
@@ -136,7 +136,7 @@ export async function testApiCon() {
     if (!res.ok || res.status !== 200) {
         console.error(res);
         if (core.GETParam('error') !== 'api-con') {
-            await core.navigate('/?error=api-con');
+            await showErrorFromCode('api-con');
         }
     }
 }

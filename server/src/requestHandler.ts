@@ -31,17 +31,12 @@ function getBody(req: IncomingMessage): Promise<Record<any, any> | string> {
         });
 
         req.on('end', () => {
-            if (!data) {
-                resolve('No body on request');
-                return;
-            }
-
             let body: any = {};
             try {
-                body = JSON.parse(data);
+                body = JSON.parse(data || '{}');
             } catch (E) {
                 log.warn`Error parsing JSON data from URL ${req.url} with JSON ${data}: ${E}`;
-                resolve('Cannot parse body');
+                resolve('Invalid JSON body');
                 return;
             }
 
@@ -59,9 +54,18 @@ export default async function (
     log.verbose`Incoming: ${req.method} ${req.url}`;
     const start = now();
 
+    if (req.method !== 'POST') {
+        res.statusCode = 405;
+        res.end(JSON.stringify({
+            status: 405,
+            error: 'Method not allowed',
+            ok: false,
+        }));
+        return;
+    }
+
     // set response headers
     res.setHeader('Access-Control-Allow-Origin', req.headers.origin || '*');
-    res.setHeader('Access-Control-Allow-Methods', 'POST');
     res.setHeader('Access-Control-Allow-Credentials', 'true');
     res.setHeader('Content-Type', 'application/json');
 

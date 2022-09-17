@@ -41,7 +41,7 @@ class Logger {
     /**
      * Outputs a message to the console and/or file
      */
-    output(level: LogLvl, type: string, ...messages: any[]): void {
+    public output(level: LogLvl, type: string, ...messages: any[]): void {
         if (!this.active) {
             return;
         }
@@ -71,7 +71,7 @@ class Logger {
         }
     }
 
-    private async logToDB(message: string, from = 'server'): Promise<mysql.OkPacket | undefined> {
+    public async logToDB(message: string, from = 'server'): Promise<mysql.OkPacket | undefined> {
         if (!query) return;
         return await query<mysql.OkPacket>`
             INSERT INTO logs (msg, madeBy)
@@ -82,14 +82,14 @@ class Logger {
     /**
      * Logs a message but only if the 'verbose' flag is set
      */
-    verbose(msg: string | TemplateStringsArray, ...params: any[]) {
+    public verbose(msg: string | TemplateStringsArray, ...params: any[]) {
         this.output(LogLvl.VERBOSE, c.grey`VERB`, tagFuncParamsToString(msg, params));
     }
 
     /**
      * Logs a message
      */
-    log(msg: string | TemplateStringsArray, ...params: any[]) {
+    public log(msg: string | TemplateStringsArray, ...params: any[]) {
         const message = tagFuncParamsToString(msg, params);
 
         if (this.dbLogLevel >= LogLvl.INFO) {
@@ -102,36 +102,34 @@ class Logger {
     /**
      * Logs a warning
      */
-    warn(msg: string | TemplateStringsArray, ...params: any[]) {
+    public warn(msg: string | TemplateStringsArray, ...params: any[]) {
         this.output(LogLvl.WARN, c.yellow`WARN`, tagFuncParamsToString(msg, params));
     }
 
     /**
      * Logs an error
      */
-    error(msg: string | TemplateStringsArray, ...params: any[]) {
+    public error(msg: string | TemplateStringsArray, ...params: any[]) {
         this.output(LogLvl.ERROR, c.red`ERR`, tagFuncParamsToString(msg, params));
     }
 
     /**
      * Closes any active file handles
      */
-    async close(): Promise<unknown> {
+    public async close(): Promise<unknown> {
         this.active = false;
         return new Promise(resolve => {
             this.fileHandle?.close?.(resolve);
         });
     }
 
-    setLogOptions(options: IFlags) {
+    public setLogOptions(options: IFlags) {
         this.level = options.logLevel;
         this.level = options.dbLogLevel;
         this.useConsole = !options.logTo;
         this.path = options.logTo;
 
         if (!this.useConsole) {
-            console.log(`Logging to file: ${this.path}`);
-
             if (!fs.existsSync(this.path)) {
                 fs.writeFileSync(this.path, '');
             }
@@ -140,12 +138,13 @@ class Logger {
                 flags: 'a'
             });
 
-            this.output(LogLvl.INFO, 'START', new Date().toISOString());
+            this.log(`Logging to file: ${this.path}`);
         }
+        this.output(LogLvl.ERROR, 'START', new Date().toISOString());
     }
     
     // Singleton instance of this class
-    static instance: Logger = new Logger();
+    public static instance: Logger = new Logger();
 }
 
 export function setupLogger(options: IFlags) {

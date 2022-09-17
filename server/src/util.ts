@@ -5,6 +5,9 @@ import { v4 as UUIdv4 } from 'uuid';
 
 import { queryFunc } from './sql';
 import crypto from 'crypto';
+import log from "./log";
+import c from "chalk";
+import { flags } from "./index";
 
 /**
  * Object to return from a route if incorrect credentials were provided.
@@ -100,6 +103,8 @@ export function loadEnv(filePath = '.env'): void {
         ...process.env,
         ...dotenv.parse(contents)
     };
+
+    log.log(c.green`Loaded environment variables from ${filePath}`);
 }
 
 // DB Query helpers
@@ -124,7 +129,7 @@ export async function authLvl(sessionId: string, query: queryFunc) {
 
     if (!res.length) return 0;
 
-    const [user] = res;
+    const [ user ] = res;
 
     return user?.['admin'] === 1 ? 2 : 1;
 }

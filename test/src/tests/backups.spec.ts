@@ -2,7 +2,7 @@ import Test from '../framework';
 import fs from 'fs/promises';
 
 async function deleteBackups () {
-	return await fs.rmdir(
+	return await fs.rm(
 		'./backups',
 		{ recursive: true }
 	);

@@ -13,16 +13,8 @@ import './tests/users.spec';
 import './tests/backups.spec';
 
 const flags = commandLineArgs([
-    {
-        name: 'verbose',
-        alias: 'v',
-        type: Boolean
-    },
-    {
-        name: 'deploy',
-        alias: 'd',
-        type: String
-    },
+    { name: 'verbose', alias: 'v', type: Boolean },
+    { name: 'deploy', alias: 'd', type: String },
 ]);
 
 export type API = (path: string, body?: any) => Promise<any>;

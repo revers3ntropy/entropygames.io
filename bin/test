@@ -1,13 +1,24 @@
 #!/bin/bash
 
+start=`date +%s`
+
+bin/kill-server 8091;
+npm i -g webpack-cli;
+
 (
   cd server || exit;
-  npx webpack-cli;
+  webpack;
 )
 
 (
   cd test || exit;
-  npx webpack-cli;
+  webpack;
 )
 
 node --enable-source-maps test
+
+end=`date +%s.%N`
+
+runtime=$( echo "$end - $start" | bc -l )
+
+echo "Deployment total time: $runtime"

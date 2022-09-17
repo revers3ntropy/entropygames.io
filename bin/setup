@@ -1,24 +1,19 @@
 #!/bin/bash
 
-if [ ! -f .env ]
-then
-  export $(cat ./server/.env | xargs)
-fi
-
 (
-	cd bin;
+	cd bin || exit;
 	npm i;
 ) &
 (
-	cd test;
+	cd test || exit;
 	npm i;
 ) &
 (
-	cd public_html/cdn;
+	cd public_html/cdn || exit;
 	npm i;
 ) &
 (
-	cd server;
+	cd server || exit;
 	npm i;
 ) & wait
 

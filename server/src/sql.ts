@@ -29,6 +29,7 @@ export default function connect (dbConfig: mysql.ConnectionOptions = {}): queryF
 
     let con: mysql.Connection;
 
+    let onConnectionListeners: (() => void)[] = [];
     let hasConnectedSQL = false;
 
     // as the server will periodically disconnect from the database,
@@ -38,17 +39,18 @@ export default function connect (dbConfig: mysql.ConnectionOptions = {}): queryF
 
         con.connect(err => {
             if (err) {
-                log.error`error when connecting to db: ${JSON.stringify(err)}`;
+                log.error(`error when connecting to db: ${JSON.stringify(err)}`);
                 setTimeout(handleDisconnect, 500);
             }
 
             log.log(c.green(`Connected to SQL server`));
+            onConnectionListeners.forEach(l => l());
             hasConnectedSQL = true;
         });
 
         con.on('error', (err: any) => {
             if (err.code === 'PROTOCOL_CONNECTION_LOST') {
-                log.warn`Lost connection to SQL server`;
+                log.warn(`Lost connection to SQL server`);
                 handleDisconnect();
             } else {
                 throw err;
@@ -60,9 +62,11 @@ export default function connect (dbConfig: mysql.ConnectionOptions = {}): queryF
 
     // returns query function
     return (queryParts: TemplateStringsArray, ...params: any[]): Promise<any> => {
-        return new Promise((resolve, fail) => {
+        return new Promise(async (resolve, fail) => {
             if (!hasConnectedSQL) {
-                fail('SQL server not connected');
+                await new Promise<void>(resolve => {
+                    onConnectionListeners.push(resolve);
+                });
             }
 
             const query = queryParts.reduce((acc, cur, i) => {
