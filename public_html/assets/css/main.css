@@ -18,8 +18,6 @@ body:not([data-theme]) {
     --anim-speed: 150ms;
     --anim-slow: 300ms;
     --anim-really-slow: 600ms;
-
-    --nav-colour: transparent;
 }
 
 /*
@@ -27,45 +25,52 @@ body:not([data-theme]) {
  */
 :root,
 [data-theme='dark'] {
-    --text-v-light: #909090;
+    --nav-colour: transparent;
+    --nav-border-bottom: transparent;
 
     --label-bg: #c0c0c0;
     --label-text: #000000;
     --label-border: #e0e0e0;
 
-    --nav-border-bottom: transparent;
-
-    --text: #ffffff;
+    --bg: rgb(30, 30, 30);
     --bg-accent: #505050;
-    --accent: #076207;
-    --text-warning: #ff8d8d;
+    --light-bg: #2a2a2a;
+
+    --accent: #3bb09a;
+
     --border: #646464;
     --border-light: #545454;
 
-    --bg: rgb(30, 30, 30);
-    --light-bg: #2a2a2a;
-    --text-color: rgb(255, 255, 255);
+    --text: rgb(255, 255, 255);
     --text-light: rgb(227, 227, 227);
     --text-lighter: rgb(208, 208, 208);
+    --text-v-light: #909090;
+    --text-warning: #ff8d8d;
 }
 
 [data-theme='light'] {
-    --bg: #eeeeee;
-    --bg-accent: white;
-    --accent: #15cb15;
-    --nav-border-bottom: transparent;
+    --label-bg: #c0c0c0;
+    --label-text: #000000;
+    --label-border: #e0e0e0;
 
-    --text-warning: red;
+    --bg: rgb(239, 239, 239);
+    --bg-accent: #e1e1e1;
+    --light-bg: #eeeeee;
 
-    --border: #c5c5c5;
-    --border-light: #e8e8e8;
+    --accent: #65ccba;
 
-    --text: #000000;
-    --text-light: #575757;
+    --border: #ababab;
+    --border-light: #adadad;
+
+    --text: rgb(0, 0, 0);
+    --text-light: rgb(66, 66, 66);
+    --text-lighter: rgb(87, 87, 87);
+    --text-v-light: #727272;
+    --text-warning: #ff8d8d;
 }
 
 * {
-    color: var(--text-color);
+    color: var(--text);
     font-family: 'Lato', sans-serif;
     transition: var(--anim-speed);
 }
@@ -82,14 +87,15 @@ body:not([data-theme]) {
     background: var(--text-lighter);
 }
 ::-webkit-scrollbar-thumb:hover {
-    background: var(--text-color);
+    background: var(--text);
 }
 
 
 /* -------------------------------------------------- STRUCTURE ---------------------------------------------------- */
 
 html,
-body {
+body,
+main {
     padding: 0;
     margin: 0;
     background: var(--bg);
@@ -98,6 +104,7 @@ body {
 main {
     min-height: calc(100vh - var(--nav-height));
     padding: 10px;
+    overflow-x: hidden;
 }
 
 html,
@@ -131,8 +138,9 @@ main {
 }
 
 section {
-    border-bottom: 1px solid var(--border);
-    padding-bottom: 20px;
+    padding: 10px;
+    margin: 10px;
+    border-radius: 5px;
 }
 
 .bordered {
@@ -156,29 +164,6 @@ hr {
 }
 
 /* -------------------------------------------------- INPUT ---------------------------------------------------- */
-
-input,
-button,
-textarea {
-    border: none;
-    background: none;
-    font-size: 17px;
-    outline: none;
-}
-
-input {
-    border-bottom: 2px solid var(--border);
-    border-radius: 10px 10px 0 0;
-    padding: 6px;
-}
-
-input:hover {
-    border-bottom: 2px solid var(--accent);
-}
-
-input:focus {
-    background: var(--bg-accent);
-}
 
 .editable-text {
     border: 1px solid transparent;
@@ -209,73 +194,6 @@ textarea {
     transition: 0s;
 }
 
-.big-link {
-    margin: 20px;
-    font-size: 20px;
-    text-decoration: none;
-    border-radius: 10px;
-    background-color: var(--accent);
-    height: fit-content;
-    width: fit-content;
-    border: none;
-    padding: 10px;
-    display: grid;
-    /* assumed one svg icon and then text */
-    grid-template-columns: 60px 1fr;
-    align-items: center;
-    cursor: pointer;
-}
-
-.big-link:hover {
-    background-color: var(--bg-accent);
-}
-
-.big-link:hover svg {
-    fill: var(--accent);
-}
-
-.big-link.secondary {
-    background-color: transparent;
-    border: 1px solid var(--border);
-}
-
-.big-link.secondary:hover {
-    border-color: var(--accent);
-    box-shadow: 0 0 6px 2px var(--border-light);
-}
-
-input,
-button,
-textarea {
-    font-family: 'Quicksand', sans-serif;
-}
-
-a:hover,
-a:focus,
-button:hover,
-button:focus,
-input:hover,
-input:focus,
-textarea:hover,
-textarea:focus {
-    color: var(--text-light);
-}
-
-input,
-textarea {
-    font-size: 18px;
-}
-
-button,
-a {
-    cursor: pointer;
-}
-
-input,
-textarea {
-    cursor: text;
-}
-
 select {
     background: var(--bg-accent);
     outline: none;
@@ -285,10 +203,22 @@ select {
     min-width: 40px;
 }
 
+input, textarea {
+    background-color: var(--light-bg);
+    outline: none;
+}
+
+svg {
+    fill: var(--text) !important;
+    stroke: var(--text) !important;
+    color: var(--text) !important;
+}
+
 /* -------------------------------------------------- TEXT ---------------------------------------------------- */
 
 * {
     color: var(--text);
+    font-size: 17px;
 }
 
 body {
@@ -311,6 +241,48 @@ h2 {
 h2,
 h3 {
     font-family: 'Raleway', sans-serif;
+}
+
+h1 {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 60px;
+}
+
+pre code {
+    font-family: 'Roboto Mono', monospace;
+    margin: 8px;
+    padding: 4px;
+    background: var(--bg-accent);
+    border-radius: 4px;
+    display: block;
+    border: none;
+}
+
+.ui.inverted.button,
+.ui.inverted.button:hover,
+.ui.inverted.button.primary,
+.ui.inverted.button.primary:hover{
+    box-shadow: none !important;
+    background: var(--bg-accent);
+}
+.ui.inverted.button:hover,
+.ui.button {
+    background: var(--accent) !important;
+    color: var(--text) !important;
+    border: 2px solid var(--accent);
+}
+.ui.button:hover {
+    background: var(--bg-accent) !important;
+}
+.ui.inverted.button.primary {
+    color: var(--accent);
+    border: 2px solid var(--accent);
+    font-size: 17px;
+    padding: 10px 20px;
+}
+.ui.inverted.button:hover {
+    background: var(--accent) !important;
+    color: var(--text) !important;
 }
 
 @media only screen and (max-aspect-ratio: 6/5) {
@@ -341,100 +313,3 @@ h3 {
     color: var(--text) !important;
     fill: var(--text) !important;
 }
-
-/* Settings Button */
-
-.settings-button {
-    position: fixed;
-    bottom: 15px;
-    right: 15px;
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-}
-
-.settings-button svg {
-    fill: var(--text-light);
-}
-
-/* ------------------------------------------------- NAV & FOOTER -------------------------------------------------- */
-
-
-footer {
-    height: 200px;
-    background: var(--bg-accent);
-    padding: 0;
-    margin: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    background-color: var(--light-bg);
-    place-items: center;
-}
-
-.icon-link {
-    padding: 0 5px;
-    margin: 0;
-    background: none;
-}
-
-.icon-link:hover {
-    background: none;
-}
-
-.icon-link:hover img {
-    transform: scale(0.9);
-}
-
-input, textarea {
-    background-color: var(--light-bg);
-}
-
-/*-- CODE --*/
-pre code {
-    font-family: 'Roboto Mono', monospace;
-    margin: 8px;
-    background: var(--light-bg);
-    border-radius: 10px;
-    display: block;
-    border: none;
-}
-
-/*-- TEXT --*/
-h1 {
-    font-family: 'Josefin Sans', sans-serif;
-    font-size: 60px;
-}
-
-.paragraph {
-    text-align: left;
-    padding-left: 10vw;
-    font-size: 18px;
-}
-
-/* this will probably break at some point... not really sure what I am doing here */
-:not(nav) > * > a {
-    color: var(--text-light);
-    text-decoration: none;
-    transition: var(--anim-speed);
-    padding: 2px;
-}
-
-:not(nav) > * > a:hover {
-    color: var(--text-lighter);
-}
-
-button {
-    background: var(--light-bg);
-    border: var(--text-lighter);
-}
-button:hover {
-    background: var(--light-bg);
-    border: var(--text-lighter);
-}
-

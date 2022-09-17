@@ -3,11 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <title>Entropy Games</title>
-    <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="stylesheet" href="./assets/css/main.css">
     <script defer type="module">
         import { init } from './assets/js/main.js';
-
-        init('.');
+        await init();
     </script>
 </head>
 <body>
@@ -17,7 +16,10 @@
         Entropy Games
     </h1>
     <p>
-        Check out our <a href="https://github.com/Entropy-Games" class="hover-underline" target=”_blank”>github</a>!
+        <a href="https://github.com/Entropy-Games" class="ui labeled icon button" target="_blank">
+            <i class="github icon"></i>
+            GitHub
+        </a>
     </p>
 </main>
 <footer></footer>

@@ -1,5 +1,4 @@
 import * as core from './main.js';
-import FullPagePopup from './components/FullPagePopup.js';
 
 /**
  * @param {string} message - is parsed as HTML
@@ -81,6 +80,8 @@ export async function loadFooter($footer) {
         `${core.ROOT_PATH}/assets/html/footer.html`
     );
     state.$footer.innerHTML = await footerHTMLRes.text();
+    reservoir.reload($footer);
+    updateTheme();
 }
 
 /**
@@ -94,10 +95,8 @@ export async function loadNav($nav) {
     const navRes = await fetch(`${core.ROOT_PATH}/assets/html/nav.html`);
     $nav.innerHTML = await navRes.text();
 
-    // replace links in nav relative to this page
-    document.querySelectorAll('nav a').forEach(a => {
-        a.setAttribute('href', `${core.ROOT_PATH}${a.getAttribute('href')}`);
-    });
+    reservoir.reload($nav);
+    updateTheme();
 }
 
 export async function domIsLoaded() {
@@ -120,18 +119,26 @@ export function scrollToTop() {
 /**
  * Sets the data-theme attribute of the document body from the value stored in localStorage or the theme preference
  */
-export function updateTheme() {
+export function updateTheme($el=document) {
     const theme =
         getTheme() ||
         (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
     document.body.setAttribute('data-theme', theme);
+
+    $el.querySelectorAll('*').forEach(el => {
+        if (theme === 'dark') {
+            el.classList.add('inverted');
+        } else {
+            el.classList.remove('inverted');
+        }
+    });
 }
 
 /**
  * Sets the localStorage theme value and then updates the theme
- * @param value
+ * @param {string} value
  */
-export function setTheme(value = 'light') {
+export function setTheme(value = 'dark') {
     localStorage.setItem(core.LS_THEME, value);
     updateTheme();
 }
@@ -139,46 +146,5 @@ export function setTheme(value = 'light') {
  * Gets the localStorage theme value
  */
 export function getTheme() {
-    return localStorage.getItem(core.LS_THEME);
-}
-
-/**
- * Gets the localStorage theme value
- */
-export function getInverseTheme() {
-    return getTheme() === 'dark' ? 'light' : 'dark';
-}
-
-export function loadSettings() {
-    const settingsButton = document.createElement('div');
-    settingsButton.classList.add('settings-button');
-    settingsButton.classList.add('icon');
-    settingsButton.setAttribute('svg', 'settings.svg');
-
-    R.set({
-        switchTheme: () => {
-            core.setTheme(core.getInverseTheme());
-            const svg =
-                getTheme() === 'light' ? 'light-theme.svg' : 'dark-theme.svg';
-            R.set('themeButtonSVG', svg);
-        },
-        themeButtonSVG: 'light-theme.svg',
-    });
-
-    settingsButton.onclick = () => {
-        FullPagePopup(
-            document.body,
-            `
-                <button
-                    aria-label="Switch theme"
-                    class="icon bordered"
-                    pump.svg="\${themeButtonSVG}"
-                    bind.click="switchTheme()"
-                ></button>
-            `,
-            'Settings'
-        );
-    };
-
-    document.body.appendChild(settingsButton);
+    return localStorage.getItem(core.LS_THEME) ?? 'dark';
 }

@@ -10,18 +10,24 @@ export const
     LS_SESSION = 'session',
     SPINNER_STOP_DELAY = 300,
     MAX_NOTIFICATIONS = 4,
-    NOTIFICATION_SHOW_TIME = 5000;
+    NOTIFICATION_SHOW_TIME = 5000,
+    API_ROUTES = {
+        'dev': 'http://localhost:9080/',
+        'staging': 'https://api-staging.entropygames.io/?',
+        'prod': 'https://api.entropygames.io/?'
+    };
 
 // should be const but is set once at the start of the script
 export let
     ROOT_PATH = '',
-    API_ROOT = 'https://api.entropygames.io',
-    ENV = 'prod';
+    ENV = 'prod',
+    API_ROOT = API_ROUTES[ENV];
 
 export const state = {
     $nav: null,
     $footer: null,
     $error: null,
+    $main: null,
     currentNotificationId: 0,
     visibleNotifications: [],
     userInfoCallbacks: [],
@@ -57,17 +63,17 @@ const relativeTimeFormat = new Intl.RelativeTimeFormat('en', {
     numeric: 'auto',
 });
 
-import './components/index.js';
 import {
     domIsLoaded,
     loadFooter,
-    loadNav, loadSettings,
-    scrollToTop,
+    loadNav,
+    scrollToTop, setTheme,
     showError,
     waitForReady
 } from "./dom.js";
 import { getSession, handleUserInfo, testApiCon, userInfo, signInAs, logout } from './auth.js';
 import { rawAPI } from './backendAPI.js';
+import '../components/index.js';
 
 export * from './auth.js';
 export * from './backendAPI.js';
@@ -93,6 +99,7 @@ function detectEnv () {
     } else {
         ENV = 'test';
     }
+    return ENV;
 }
 
 /**
@@ -102,31 +109,16 @@ function detectEnv () {
  * @param {boolean} [requireAdmin=false] session cookies must be valid and admin
  * @param {boolean} [noApiTest=false] don't test the API connection
  */
-export async function init(
-    rootPath,
+export async function init({
+    rootPath='.',
     requireLoggedIn = false,
     requireAdmin = false,
     noApiTest = false
-) {
+}={}) {
     const start = performance.now();
 
     ROOT_PATH = rootPath;
-
-    detectEnv();
-
-    switch (ENV) {
-        case 'dev':
-            API_ROOT = 'http://localhost:9080/';
-            break;
-        case 'prod':
-            API_ROOT = 'https://api.entropygames.io/?';
-            break;
-        case 'staging':
-            API_ROOT = 'https://api-staging.entropygames.io/?';
-            break;
-        default:
-            throw 'unknown environment';
-    }
+    API_ROOT = API_ROUTES[detectEnv()];
 
     if (!noApiTest) {
         await testApiCon();
@@ -159,31 +151,32 @@ export async function init(
     const backsToRoot = (rootPath.match(/\.\./g) || []).length;
     const path = location.pathname;
     const pathFromRoot = '/' +  path.split('/').slice(-backsToRoot-1, -1).join('/');
-    
+
     // after made sure that the user has the right permissions,
     // load the rest of the page
     R.loadFromLocalStorage(false);
-    R.set(
-        {
-            rootPath,
-            user: state.userInfoJSON,
-            signedIn: state.isSignedIn,
-            path: pathFromRoot,
-            url: location.href
-        },
-        true
-    );
+    R.set({
+        rootPath,
+        user: state.userInfoJSON,
+        signedIn: state.isSignedIn,
+        path: pathFromRoot,
+        url: location.href,
+        theme: localStorage.getItem(LS_THEME),
+        setTheme: (val) => {
+            setTheme(val);
+            R.set({ theme: val });
+        }
+    }, true);
 
     await waitForReady();
 
     // load footer and nav bar
     state.$nav = document.querySelector(`nav`);
     state.$footer = document.querySelector(`footer`);
+    state.$main = document.querySelector(`main`);
 
     await loadNav(state.$nav);
     await loadFooter(state.$footer);
-    
-    loadSettings();
 
     scrollToTop();
 

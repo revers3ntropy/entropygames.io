@@ -3,8 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <title>Entropy Games</title>
-    <script defer src="../main.js"></script>
-
+    <link rel="stylesheet" href="../assets/css/main.css">
+    <script defer type="module">
+		import { init } from '../assets/js/main.js';
+		await init({ rootPath: '..' });
+    </script>
     <style>
         h2 {
             margin-top: 30px;
@@ -25,7 +28,7 @@
     <h2>TABLE OF CONTENTS</h2>
 
     <ol>
-        <li><a href="#agreement">1. AGREEMENT TO TERMS</a>
+        <li><a href="#agreement">AGREEMENT TO TERMS</a>
         <li><a href="#ip">INTELLECTUAL PROPERTY RIGHTS</a>
         <li><a href="#userreps">USER REPRESENTATIONS</a>
         <li><a href="#prohibited">PROHIBITED ACTIVITIES</a>

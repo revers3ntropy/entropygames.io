@@ -3,9 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <title>EG Privacy Policy</title>
-    <script defer src="../main.js"></script>
+    <link rel="stylesheet" href="../assets/css/main.css">
+    <script defer type="module">
+        import { init } from '../assets/js/main.js';
+		await init({ rootPath: '..' });
+    </script>
 </head>
-
 <body>
 <nav></nav>
 <main>
@@ -31,22 +34,22 @@
     <div>
         <h2>How do we collect your data?</h2>
         <ul>
-            <li>Interacting with https://entropygames.io</li>
-            <li>Using the ESPM CLI with the Entropy Script NPM package</li>
+            <li>Interacting with https://entropygames.io and subdomains</li>
+            <li>Using packages and other software created by Entropy Games</li>
         </ul>
     </div>
     <div>
         <h2>3rd Parties</h2>
         <ul>
             <li>
-                Google Account: when you sign in with Google
+                When you sign in with a specific 3rd party, data will be shared with that 3rd party.
             </li>
         </ul>
     </div>
     <div>
         <h2>How do we store your data?</h2>
         <p>
-            Most of the data is stored in a MySQL database hosted on entropygames.io.<br>
+            Data is stored in a MySQL database.<br>
             Sensitive data (passwords) are encrypted.
         </p>
     </div>
@@ -70,15 +73,6 @@
     <div>
         <h2>
             What log data do we collect?
-        </h2>
-        <p>
-            We collect anonymous data whenever you visit entropygames.io like the time and date. <br>
-            This data doesn't not contain any personally identifiable information.
-        </p>
-    </div>
-    <div>
-        <h2>
-            Cookies
         </h2>
         <p>
             We collect anonymous data whenever you visit entropygames.io like the time and date. <br>

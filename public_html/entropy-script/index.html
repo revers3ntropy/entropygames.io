@@ -5,58 +5,51 @@
     <title>Entropy Script</title>
     <meta name="viewport" content="width=device-width">
     <meta name="description" content="Entropy Script - scripting language">
-    <script src="../main.js"></script>
+    <link rel="stylesheet" href="../assets/css/main.css">
+    <script defer type="module">
+        import { init } from '../assets/js/main.js';
+		await init({ rootPath: '..' });
+    </script>
 </head>
-
 <body>
 <nav id="nav"></nav>
 <main>
-    <h1>
-        Entropy Script
-    </h1>
-    <a href="docs" style="font-size: 25px">Documentation</a>
-    <p class="paragraph">
-        Entropy Script is a scripting language designed as a scripting language for game engines, servers and general utility.<br>
-        It uses Node.js or browsers as a runtime. Entropy script is similar to TypeScript, but has runtime type checking and is not compiled. <br>
-    </p>
-
-    <div>
-        <a href="https://github.com/revers3ntropy/entropy-script" class="hover-underline" target=”_blank”>
+    <h1>Entropy Script</h1>
+    <div class="buttons">
+        <a href="./docs" class="ui labeled icon button" target="_blank">
+            <i class="file alternate outline icon"></i>
+            Documentation
+        </a>
+        <a href="https://github.com/Entropy-Games/entropy-script" class="ui labeled icon button" target="_blank">
+            <i class="github icon"></i>
             GitHub
-        </a> |
-        <a href="https://www.npmjs.com/package/entropy-script" class="hover-underline" target=”_blank”>
+        </a>
+        <a href="https://www.npmjs.com/package/entropy-script" class="ui labeled icon button" target="_blank">
+            <i class="npm icon"></i>
             NPM package
         </a>
+        <a href="./run" class="ui labeled icon button" target="_blank">
+            <i class="terminal icon"></i>
+            Playground
+        </a>
     </div>
+    <section>
+        <p>
+            Entropy Script is a scripting language designed as a scripting language for game engines, servers and general utility.<br>
+            It uses Node.js or browsers as a runtime. Entropy script is similar to TypeScript, but has runtime type checking and is not compiled.
+        </p>
+            Download using NPM:
+            <pre><code>npm install entropy-script -g</code></pre>
 
-    Download using NPM:
-    <pre><code>
-        npm install entropy-script -g
-    </code></pre>
-
-    and then use with
-    <pre><code>
-        entropy-script &lt;filename&gt;.es
-    </code></pre>
-
-    <br><Br>
-
-    Try it out in the browser <a href="./run" class="hover-underline">here</a>.
-    <br><br>
-
-
-    Compile to JavaScript with
-    <pre><code>
-        entropy-script -compile &lt;filename&gt;.es out.js
-    </code></pre>
-
-    Compile to Python with
-    <pre><code>
-        entropy-script -compile &lt;filename&gt;.es out.js --python
-    </code></pre>
-
-    Compiling has very limited support at the moment and is still in development.
-
+            and then use with
+            <pre><code>entropy-script &lt;filename&gt;.es</code></pre>
+            or
+            <pre><code>nes &lt;filename&gt;.es</code></pre>
+        <p>
+            Try it out in the browser
+            <a href="./run" class="hover-underline">here</a>.
+        </p>
+    </section>
 </main>
 <footer id='footer'></footer>
 </body>

@@ -135,9 +135,9 @@ export async function deploy(flags: commandLineArgs.CommandLineOptions): Promise
     }
 
     if (testRes.failed === 0 && flags.deploy) {
-        console.log('All tests passed, Deploying...');
+        console.log(c.green('All tests passed, Deploying...'));
         deploy(flags).then(() => {
-            console.log(c.green('Finished in ' + timeSinceStart() + 'ms'));
+            console.log(c.green('Finished test script in ' + timeSinceStart() + 'ms'));
         });
     }
 })();

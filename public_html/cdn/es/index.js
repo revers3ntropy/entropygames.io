@@ -9,13 +9,14 @@ document.head.appendChild(entropyScriptLink);
 
 entropyScriptLink.onload = async () => {
 
-	window.runES = (text) => {
-		es.run(text);
-	};
+	window.runES = es.run;
+	window.executeES = es.run;
 
 	if ('onESLoad' in window && typeof window.onESLoad === 'function') {
 		window.onESLoad(es);
 	}
+
+	window.dispatchEvent(new Event('es:load'));
 
 	const scripts = [
 		...document.querySelectorAll('script[type=es]'),

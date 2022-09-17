@@ -1,16 +1,36 @@
 <div class="nav-left">
-    <a pump.href="${console.log(SITE_ROOT),SITE_ROOT}" class="icon-link">
-        <img src="http://cdn.entropygames.io/icon/entropy-games-dark.png" alt="logo" width="50px" height="50px">
+    <a pump.href="${rootPath}">
+        <svg-loader href="`${rootPath}/cdn/img/entropy-games.svg`"></svg-loader>
     </a>
 </div>
 
 <div class="nav-center">
-    <a href="/entropy-engine">ENTROPY ENGINE</a>
-    <a href="/entropy-script">ENTROPY SCRIPT</a>
+    <a pump.href="${rootPath}/entropy-engine">ENTROPY ENGINE</a>
+    <div class="nav-item">
+        <a pump.href="${rootPath}/entropy-script">
+            ENTROPY SCRIPT
+        </a>
+        <div class="nav-item-dropdown">
+            <a pump.href="${rootPath}/entropy-script/docs" class="ui labeled icon button">
+                <i class="file alternate outline icon"></i>
+                Documentation
+            </a>
+            <a pump.href="${rootPath}/entropy-script/run" class="ui labeled icon button">
+                <i class="terminal icon"></i>
+                Playground
+            </a>
+        </div>
+    </div>
 </div>
 
 <div class="nav-right">
-
+    <button
+        aria-label="Switch theme"
+        bind.click="setTheme(theme === 'light' ? 'dark' : 'light')"
+        style="background: none; border: none; outline: none; cursor: pointer;"
+    >
+        <i pump.class="ui icon big ${theme === 'light' ? 'sun' : 'moon'}"></i>
+    </button>
 </div>
 
 <style>
@@ -48,8 +68,8 @@
     .nav-left,
     .nav-right,
     .nav-center {
-        min-width: 50px;
-        width: fit-content;
+        width: 100%;
+        height: 100%;
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -57,6 +77,10 @@
     .nav-left > *,
     .nav-right > * {
         padding: 0 5px;
+    }
+
+    .nav-right {
+        justify-content: flex-end;
     }
 
     .nav-item {
@@ -70,9 +94,11 @@
         background-color: #f9f9f9;
         width: 200px;
         box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
-        padding: 12px 16px;
+        padding: 0;
         z-index: 2;
         background: var(--bg-accent);
+        height: fit-content;
+        border-radius: 5px;
     }
 
     .nav-item:hover .nav-item-dropdown {
@@ -82,10 +108,18 @@
     .nav-item .nav-item-dropdown > * {
         width: 100%;
         background: transparent;
-        display: grid;
-        /* assumed one svg icon and then text */
-        grid-template-columns: 40px 1fr;
-        align-items: center;
         cursor: pointer;
+    }
+
+    .nav-item .nav-item-dropdown .button {
+        margin: 0;
+        padding: 10px 0;
+        background: none;
+        border: none !important;
+        outline: none;
+    }
+
+    .nav-item .nav-item-dropdown .button:hover {
+        background: var(--bg);
     }
 </style>
