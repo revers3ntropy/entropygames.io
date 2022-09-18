@@ -1,6 +1,6 @@
 #!/bin/bash
 
-bin/kill-server 8090;
+bin/kill-server 9080;
 bin/kill-server 8000;
 
 if [ "$1" = "down" ]; then

@@ -3,12 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <title>Entropy Games</title>
-    <script defer src="../../main.js?scripts=index.js"></script>
+    <script defer type="module">
+	    import {
+		    GITHUB_AUTH_CLIENT_ID,
+		    init,
+		    randomInt,
+		    randomString, ROOT_PATH,
+		    SS_GITHUB_AUTH_STATE
+	    } from '../../assets/js/main.js';
+        await init();
+
+        const state = randomString(randomInt(10, 20));
+        sessionStorage.setItem(SS_GITHUB_AUTH_STATE, state);
+        // feels wrong to have an id hard coded, but I think this is right
+        const clientID = GITHUB_AUTH_CLIENT_ID;
+        const redirect = `https://entropygames.io/auth/github-sign-in-redirect`;
+
+		R.set({
+            state,
+            clientID,
+            redirect
+        });
+    </script>
 </head>
 <body>
 <nav></nav>
 <main>
-    <a id="githubsignin">Sign in with GitHub</a>
+    <a
+        class="ui button"
+        pump.href="https://github.com/login/oauth/authorize?client_id=${clientID}&redirect_uri=${redirect}&state=${state}"
+    >
+        <i class="github icon"></i>
+        Sign in with GitHub
+    </a>
 </main>
 <footer></footer>
 </body>

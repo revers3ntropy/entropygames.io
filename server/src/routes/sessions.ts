@@ -186,6 +186,43 @@ route('create/sessions/for-forgotten-password', async ({ query, body }) => {
     await notifications.forgottenPasswordEmail(query, userId, sessionId);
 });
 
+route('create/sessions/from-github-oauth', async ({ query, body }) => {
+
+    const { code, state } = body;
+
+    if (!code || !state) {
+        return 'Missing code or state';
+    }
+
+    const accessTokenRes = await fetch('https://github.com/login/oauth/access_token', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+            client_id: process.env.GITHUB_AUTH_CLIENT_ID,
+            client_secret: process.env.GITHUB_AUTH_CLIENT_SECRET,
+            code,
+            state
+        })
+    });
+
+    const { access_token, scope, token_type } = await accessTokenRes.json();
+
+    if (!access_token) {
+        return 'Invalid code';
+    }
+
+    const userRes = await fetch('https://api.github.com/user', {
+        headers: {
+            'Authorization': `Bearer ${access_token}`
+        }
+    });
+
+    const user = await userRes.json();
+});
+
 /**
  * Removes the session from the database
  * @param sessionId

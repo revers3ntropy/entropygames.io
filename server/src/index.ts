@@ -65,6 +65,7 @@ import './routes/backups';
 import './routes/server';
 import './routes/sessions';
 import './routes/users';
+//import './routes/ee-projects';
 
 function startServer() {
     let options = {};

@@ -1,0 +1,26 @@
+<main>
+    <div id="sign-in-info"></div>
+
+    <p class="title">Settings up a local projects folder</p>
+    Open up a new terminal session and go to where you want your project's folder to be. Then run:
+    <div class="code-container"><code>npx init-eeclient -u <span id="userID"></span></code></div>
+    Create a folder called EntropyEngineProjects, and attach it to this account
+    <div class="code-container"><code>cd EntropyEngineProjects</code></div>
+
+
+    <p class="title">Create project locally</p>
+    <div class="code-container"><code>npm run create your-project-name</code></div>
+    Create the actual project folder, and set it up at entropyengine.dev automatically. <br>
+    This can also be done by going to 'My Projects'->'New Project', <Br>
+    although you will have to connect to it locally if you want to use an IDE.<br>
+    <div class="code-container"><code>cd your-project-name</code></div>
+    <div class="code-container"><code>npm run start</code></div>
+    Starts the <a href="http://localhost:5501">localhost server</a>. Click the link to take you to your project.
+
+
+    <p class="title">Connect to existing project locally</p>
+    To link to an existing project after running <code>npx init-eeclient</code> use:
+    <div class="code-container"><code>cd EntropyEngineProjects</code></div>
+    <div class="code-container"><code>npm run connect -- -p project-id</code></div>
+    You can get the project id from your editor URL, for example https://entropyengine.dev/editor?p=12345 would be 12345<Br>
+</main>

@@ -28,7 +28,7 @@ async function startServer(_: CommandLineOptions): Promise<void> {
             console.log(c.green(`Server starting`));
 
             // wait for the server to start
-            setTimeout(resolve, 1000);
+            setTimeout(resolve, 2000);
         });
     });
 }

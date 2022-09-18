@@ -2,19 +2,29 @@
 // Utility script imported by all pages
 import '../../cdn/node_modules/hydrate-web/index.js';
 
-window.R = window.reservoir;
+const R = window.reservoir;
+window.R = R;
 
 // Global constants and variables
 export const
     LS_THEME = 'theme',
     LS_SESSION = 'session',
+    SS_GITHUB_AUTH_STATE = 'github-oauth-state-temp',
+    GITHUB_AUTH_CLIENT_ID = '5e0bcd5bc1ba2bd2f4f4',
     SPINNER_STOP_DELAY = 300,
     MAX_NOTIFICATIONS = 4,
     NOTIFICATION_SHOW_TIME = 5000,
     API_ROUTES = {
+        'test': 'http://localhost:9081',
         'dev': 'http://localhost:9080/',
         'staging': 'https://api-staging.entropygames.io/?',
         'prod': 'https://api.entropygames.io/?'
+    },
+    SITE_ROOTS = {
+        'test': 'http://localhost:8000',
+        'dev': 'http://localhost:8000',
+        'staging': 'https://staging.entropygames.io',
+        'prod': 'https://entropygames.io'
     };
 
 // should be const but is set once at the start of the script
@@ -88,20 +98,6 @@ export * from './dom.js';
     }
 })();
 
-function detectEnv () {
-    const url = new URL(window.location.href);
-    if (url.hostname === 'localhost') {
-        ENV = 'dev';
-    } else if (url.hostname === 'entropygames.io') {
-        ENV = 'prod';
-    } else if (url.hostname === 'staging.entropygames.io') {
-        ENV = 'staging';
-    } else {
-        ENV = 'test';
-    }
-    return ENV;
-}
-
 /**
  * Must be called first
  * @param {string} rootPath path to root of site
@@ -110,15 +106,16 @@ function detectEnv () {
  * @param {boolean} [noApiTest=false] don't test the API connection
  */
 export async function init({
-    rootPath='.',
+    rootPath,
     requireLoggedIn = false,
     requireAdmin = false,
     noApiTest = false
 }={}) {
     const start = performance.now();
 
-    ROOT_PATH = rootPath;
-    API_ROOT = API_ROUTES[detectEnv()];
+    ENV = detectEnv();
+    API_ROOT = API_ROUTES[ENV];
+    ROOT_PATH = rootPath || SITE_ROOTS[ENV];
 
     if (!noApiTest) {
         await testApiCon();
@@ -147,19 +144,15 @@ export async function init({
         await navigate(`/?error=auth&cb=${encodeURIComponent(location.href)}`);
         return;
     }
-    
-    const backsToRoot = (rootPath.match(/\.\./g) || []).length;
-    const path = location.pathname;
-    const pathFromRoot = '/' +  path.split('/').slice(-backsToRoot-1, -1).join('/');
 
     // after made sure that the user has the right permissions,
     // load the rest of the page
     R.loadFromLocalStorage(false);
     R.set({
-        rootPath,
+        rootPath: ROOT_PATH,
         user: state.userInfoJSON,
         signedIn: state.isSignedIn,
-        path: pathFromRoot,
+        path: location.pathname,
         url: location.href,
         theme: localStorage.getItem(LS_THEME),
         setTheme: (val) => {
@@ -177,7 +170,7 @@ export async function init({
 
     // before rest so less specific than my styles
     document.head.innerHTML = `
-        <link rel="stylesheet" href="${rootPath}/assets/lib/semantic/semantic.min.css" media="print" onload="this.media='all'">
+        <link rel="stylesheet" href="${ROOT_PATH}/assets/lib/semantic/semantic.min.css" media="print" onload="this.media='all'">
     ` + document.head.innerHTML;
 
     await loadNav(state.$nav);
@@ -187,6 +180,21 @@ export async function init({
 
     const time = performance.now() - start;
     console.log(`Initialised page in ${time.toPrecision(3)}ms`);
+}
+
+function detectEnv () {
+    const url = new URL(window.location.href);
+
+    if (url.hostname === 'localhost') {
+        return 'dev';
+    }
+    if (url.hostname === 'entropygames.io') {
+        return 'prod';
+    }
+    if (url.hostname === 'staging.entropygames.io') {
+        return 'staging';
+    }
+    return 'test';
 }
 
 /**
@@ -455,4 +463,44 @@ export function escapeHTML(unsafe) {
         .replace(/>/g, '&gt;')
         .replace(/"/g, '&quot;')
         .replace(/'/g, '&#039;');
+}
+
+/**
+ * @param {number} length
+ * @returns {string}
+ */
+export function randomString(length = 10) {
+    const charset = 'abcdefghijklmnopqrstuvwxyz0123456789';
+    let text = '';
+    for (let i = 0; i < length; i++) {
+        text += charset.charAt(Math.floor(Math.random() * charset.length));
+    }
+    return text;
+}
+
+/**
+ * @param {number} min
+ * @param {number} max
+ * @returns {number}
+ */
+export function randomInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+/**
+ * @param {number} min
+ * @param {number} max
+ * @returns {number}
+ */
+export function randomFloat(min, max) {
+    return Math.random() * (max - min) + min;
+}
+
+/**
+ * @param {string} name
+ * @returns {string}
+ */
+export function getURLParam(name) {
+    const url = new URL(window.location.href);
+    return url.searchParams.get(name);
 }

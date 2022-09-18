@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Entropy Games</title>
+    <link rel="stylesheet" href="../../assets/css/main.css">
+    <script defer type="module">
+		import { init } from '../../assets/js/main.js';
+		await init({ rootPath: '../..' });
+    </script>
+</head>
+<body>
+<nav></nav>
+<main>
+    <div style="bottom: 0; top: 0">
+        <div id="top-bar">
+            <a class="button svg-grow" href="../accounts/home" style="
+                background: url(../svg/home.svg) no-repeat center center;
+                background-size: contain;
+                width: 20px; height: 20px;
+            "></a>
+            <button onclick="window.goToBuildMenu()" class="button top-menu-button" style="width: 50px; margin: 2px; height: 27px" id="build-button">Build</button>
+
+            <button onclick="window.save()" class="button top-menu-button" style="width: 100px" id="save">Save</button>
+
+            <p style="width: 200px; font-size: 20px; text-align: center" id="project-name"></p>
+
+            <button  onclick="window.run()" class="button top-menu-button svg-grow" id="run" style="
+                background: url(../svg/play.svg) no-repeat center center;
+                background-size: contain;
+                width: 80px; height: 20px;
+            "></button>
+
+            <a class="button svg-grow" href="../share?p=" style="
+                background: url(../svg/share.svg) no-repeat center center;
+                background-size: contain;
+                width: 20px; height: 15px;
+            " id="share"></a>
+
+            <div>
+                ping: <span id="ping"></span>ms
+            </div>
+        </div>
+        <div id="content">
+            <div id="menu-bar-lower">
+                <div style="display: grid">
+                    <button
+                        onclick="window.setState(window.sceneView)"
+                        class="button tab"
+                        style="grid-column: 1/3; width: 100%"
+                        id="go-to-scene-button"
+                    >
+                        Scene
+                    </button>
+                    <button
+                        onclick="window.setState(window.scriptEditor)"
+                        class="button tab"
+                        style="grid-column: 3/5; width: 100%"
+                        id="go-to-scripts-button"
+                    >
+                        Scripts
+                    </button>
+                    <button
+                        onclick="window.setState(window.gameView)"
+                        class="button tab"
+                        style="grid-column: 5/7; width: 100%"
+                        id="go-to-game-button"
+                    >
+                        Game
+                    </button>
+
+                    <button
+                        onclick="window.setState(window.assets)"
+                        class="button tab"
+                        style="grid-column: 7/9; width: 100%"
+                        id="go-to-assets-button"
+                    >
+                        Assets
+                    </button>
+                    <button
+                            onclick="window.setState(window.sceneSettings)"
+                            class="button tab"
+                            style="grid-column: 9/11; width: 100%"
+                            id="go-to-scene-settings-button"
+                    >
+                        Scene Settings
+                    </button>
+                    <button
+                        onclick="window.setState(window.comments)"
+                        class="button tab"
+                        style="grid-column: 11/13; width: 100%"
+                        id="go-to-comments-button"
+                    >
+                        Comments
+                    </button>
+                </div>
+            </div>
+            <div id="hierarchy"></div>
+
+            <div id="comments"></div>
+
+            <div id="scripts"></div>
+
+            <div id="canvas">
+                <div id="scene-toolbar"></div>
+                <canvas id="myCanvas"></canvas>
+            </div>
+
+            <div id="assets"></div>
+
+            <div id="scene-settings"></div>
+
+            <div id="inspector"></div>
+
+            <div id="pop-up">
+                <div id="pop-up-content"></div>
+            </div>
+        </div>
+    </div>
+</main>

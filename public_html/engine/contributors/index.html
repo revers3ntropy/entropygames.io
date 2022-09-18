@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Entropy Games</title>
+    <link rel="stylesheet" href="../../assets/css/main.css">
+    <link rel="stylesheet" href="../../assets/lib/chartist/chartist.min.css">
+    <script defer type="module">
+        import '../../assets/lib/chartist/chartist.min.js';
+		import { init } from '../../assets/js/main.js';
+		await init();
+    </script>
+</head>
+<body>
+<nav></nav>
+<main>
+    <div id="header"></div>
+
+    <div id="project-name" style="text-align: center; font-size: 25px"></div>
+
+    <div id="title">
+        Contributors <span style="font-size: 20px">(<span id="no-of-contributors"></span>)</span>
+    </div>
+
+    <div id="your-rank"></div>
+
+
+    <div id="podium">
+        <div id="latest-contributor"></div>
+        <div id="contributor-podium"></div>
+    </div>
+
+    <p style="text-align: center">
+        Total Saves per Day
+    </p>
+    <div style="display: flex; justify-content: center; align-items: center">
+        <div class="chart">
+            <div class="ct-chart ct-golden-section" id="chart-total" style=""></div>
+        </div>
+    </div>
+
+    <div style="font-size: 25px; text-align: center; margin-top: 20px">
+        All Contributors
+    </div>
+
+    <div id="all-contributors"></div>
+</main>

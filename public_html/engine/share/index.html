@@ -1,0 +1,41 @@
+<main>
+
+    <div style="display: flex; align-items: center; justify-content: center">
+        <div style="margin-top: 50px; border-radius: 20px; display: inline-block; padding: 10px; border: 1px solid var(--text-colour)" class="blur">
+            <div style="text-align: center; margin: 10px 10px 30px 10px;">
+                <a class="button" href="editor?p=" id="back">back</a>
+            </div>
+            <div style="text-align: center; margin: 10px">
+                <label>
+                    (Leave blank to allow anyone with the link to access)<Br>
+                    Username:
+                    <input type="text" id="username" style="border-bottom: 1px solid var(--text-colour)">
+                </label>
+            </div>
+
+            <div style="text-align: center; margin: 30px 10px">
+                <label for="access">
+                    Access Level:
+                </label>
+                <select id="access">
+                    <option value="0">Can't access</option>
+                    <option value="1">Play Build</option>
+                    <option value="2">Edit</option>
+                </select>
+            </div>
+
+
+            <div style="text-align: center; margin: 10px">
+                <button id="submit" style="font-size: 18px">Share</button>
+            </div>
+
+            <div style="text-align: center; min-height: 10px">
+                <div id="error" style="color: #fd6262"></div>
+            </div>
+        </div>
+    </div>
+
+    <div style="text-align: center; margin-top: 10px">
+        <a href="../contributors?p=" id="see-contributors"> See all contributors</a>
+    </div>
+</main>

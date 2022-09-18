@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Entropy Games</title>
+    <link rel="stylesheet" href="../assets/css/main.css">
+    <script defer type="module">
+		import { init } from '../assets/js/main.js';
+		await init({ rootPath: '..', requireLoggedIn: false });
+    </script>
+</head>
+<body>
+<nav></nav>
+<main>
+    <div style="text-align: center; margin-top: 20px">
+        <div hidden="!signedIn">
+            <a href="./my-projects" style="font-size: 30px">
+                My Projects
+            </a>
+        </div>
+        <div hidden="signedIn">
+            <a pump.href="${rootPath}/auth/sign-in" style="font-size: 25px; margin: 10px">
+                Sign In
+            </a>
+            <a pump.href="${rootPath}/auth/create-account" style="font-size: 25px">
+                Create Account
+            </a>
+        </div>
+    </div>
+</main>
+<footer></footer>
+</body>
+</html>

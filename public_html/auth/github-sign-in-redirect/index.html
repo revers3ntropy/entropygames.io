@@ -3,9 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <title>Entropy Games</title>
-    <script defer src="../../main.js?index.js"></script>
-</head>
+    <script defer type="module">
+	    import { GITHUB_AUTH_CLIENT_ID, init } from '../../assets/js/main.js';
+        await init({ rootPath: '../..' });
 
+        //https://entropygames.io/auth/github-sign-in-redirect/?code=c6e75b8e058b941ab58c&state=5itmyevdmktn5gibqqcx
+
+        const code = R.get('code');
+        const state = R.get('state');
+
+        const stateTemp = sessionStorage.getItem('github-oauth-state-temp');
+        sessionStorage.removeItem('github-oauth-state-temp');
+
+        if (state !== stateTemp) {
+            alert('State mismatch');
+            throw 'State mismatch';
+        }
+
+		const accessTokenRes = await fetch('https://github.com/login/oauth/access_token', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+	            'Accept': 'application/json'
+            },
+            body: JSON.stringify({
+                client_id: GITHUB_AUTH_CLIENT_ID,
+                client_secret: 'c6e75b8e058b941ab58c',
+                code,
+                state
+            })
+        });
+
+        request(`sign-in-with-github`, {
+	        code: urlParams.get('code')
+        }).then(res => {
+	        if (!res.id) {
+		        console.error('Invalid ID: ' + res.id);
+		        return;
+	        }
+	        localStorage.setItem('auth-id', res.id);
+        });
+
+    </script>
+</head>
 <body>
 <nav></nav>
 <main>

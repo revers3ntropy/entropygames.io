@@ -1,0 +1,26 @@
+#!/bin/bash
+
+start=`date +%s`
+
+die () {
+    echo >&2 "$@"
+    exit 1
+}
+
+[ "$#" -eq 1 ] || die "1 argument required, $# provided"
+
+if [ "$1" = "local" ]; then
+  mysql -u root << eof
+      DROP DATABASE IF EXISTS entropygames_dev;
+      CREATE DATABASE entropygames_dev
+eof
+
+  mysql -u root entropygames_dev < ./sql/schema.sql
+fi
+
+
+end=`date +%s.%N`
+
+runtime=$( echo "$end - $start" | bc -l )
+
+echo "Deployment total time: $runtime"

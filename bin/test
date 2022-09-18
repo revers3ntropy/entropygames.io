@@ -3,7 +3,6 @@
 start=`date +%s`
 
 bin/kill-server 8091;
-npm i -g webpack-cli;
 
 (
   cd server || exit;

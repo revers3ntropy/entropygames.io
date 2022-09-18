@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Entropy Games</title>
+    <link rel="stylesheet" href="../../assets/css/main.css">
+    <script defer type="module">
+		import { init } from '../../assets/js/main.js';
+		await init();
+    </script>
+</head>
+<body>
+<nav></nav>
+<main>
+
+    <input type="text" id="clipboard" style="position: absolute; top: -100000px"/>
+
+    <div style="height: 30px; display: flex;">
+        <a class="button" id="back" href="../editor?p="></a>
+    </div>
+
+
+    <p style="text-align: center; font-size: 50px">
+        Build project <span id="project-name"></span>
+    </p>
+
+    <div style="display: none" id="has-built">
+        <div style="font-size: 18px; text-align: center">
+            Play the built project here
+        </div>
+
+        <div style="display: flex; justify-content: center">
+            <div id="share-url-container">
+                <div id="share-url"></div>
+
+                <div id="copy-url-to-clipboard"></div>
+                <button id="go-to-build"></button>
+            </div>
+        </div>
+        <div style="text-align: center; padding-top: 10px">
+            <button onclick="window.downloadHTML();" style="font-size: 20px; padding: 8px; border-radius: 4px" id="download">
+                Download HTML
+            </button>
+
+            <a style="font-size: 20px; padding: 8px; border-radius: 4px" id="play-build">
+                Play Build
+            </a>
+        </div>
+    </div>
+
+    <div style="text-align: center; padding-top: 30px">
+        <button onclick="window.build();" style="font-size: 25px; padding: 8px; border-radius: 4px" id="build">
+            Build Project
+        </button>
+    </div>
+</main>
