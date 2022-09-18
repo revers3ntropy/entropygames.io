@@ -175,6 +175,11 @@ export async function init({
     state.$footer = document.querySelector(`footer`);
     state.$main = document.querySelector(`main`);
 
+    // before rest so less specific than my styles
+    document.head.innerHTML = `
+        <link rel="stylesheet" href="${rootPath}/assets/lib/semantic/semantic.min.css" media="print" onload="this.media='all'">
+    ` + document.head.innerHTML;
+
     await loadNav(state.$nav);
     await loadFooter(state.$footer);
 

@@ -23,6 +23,7 @@
         R.setDefaults({
 	        esPlayGroundCode: 'print("Hello World!");',
 	        esPlaygroundIterations: 10,
+            esPlaygroundCompile: false
         }, true);
 
         const editor = CodeMirror.fromTextArea(document.querySelector('textarea'), {
@@ -45,8 +46,12 @@
 	        R.set('esPlaygroundLogs', [m, ...R.get('esPlaygroundLogs')]);
         }
 
-        async function execute (compileToJS=false) {
+        async function execute () {
 	        R.set({ esPlaygroundLogs: [] });
+
+	        if (!!R.get('esPlaygroundCompile')) {
+		        outputFunc('Open the dev tools console to see output');
+	        }
 
 			const env = new es.Context();
 			env.parent = es.global;
@@ -54,7 +59,7 @@
 	        const res = run(R.get('esPlayGroundCode'), {
 		        measurePerformance: true,
                 env,
-                compileToJS
+                compileToJS: !!R.get('esPlaygroundCompile')
 	        })
 	        if (res.error) {
 		        outputFunc(res.error.str);
@@ -64,22 +69,34 @@
 		function perfTest () {
 			R.set({ esPlaygroundLogs: [] });
 
+			if (!!R.get('esPlaygroundCompile')) {
+				outputFunc('Open the dev tools console to see output');
+			}
+
 			const nIterations = parseInt(R.get('esPlaygroundIterations'));
+			if (isNaN(nIterations)) {
+                outputFunc('Invalid number of iterations');
+                return;
+            }
 
 			let totalTime = 0;
 
 			const start = performance.now();
 
 			for (let i = 0; i < nIterations; i++) {
+				const iterStart = performance.now();
+
 				const env = new es.Context();
 				env.parent = es.global;
 
 				let res = run(R.get('esPlayGroundCode'), {
 					env,
-                    measurePerformance: true
+                    measurePerformance: true,
+					compileToJS: !!R.get('esPlaygroundCompile')
                 });
 				if (res.error) outputFunc(res.error.str);
-				totalTime += res.timeData.total;
+
+				totalTime += performance.now() - iterStart;
 			}
 			const end = performance.now();
 			const average = Number((totalTime / nIterations).toPrecision(3));
@@ -97,10 +114,6 @@
     <section class="buttons">
         <button bind.click="execute()" class="ui button primary">
             <i class="ui play circle outline icon large"></i>
-            Execute
-        </button>
-        <button bind.click="execute(true)" class="ui button primary" data-tooltip="Compile to JavaScript first">
-            <i class="ui cogs icon large"></i>
             Execute
         </button>
         <button bind.click="perfTest()" class="ui button" style="border-radius: 5px 0 0 5px; margin-right: 0">
@@ -125,8 +138,11 @@
                 "
             >
         </label>
+        <button class="ui button" bind.click="this.set('esPlaygroundCompile', !esPlaygroundCompile, true)">
+            <i pump.class="ui ${esPlaygroundCompile ? 'check square outline' : 'square outline'} icon large"></i>
+            Compile to JS first
+        </button>
     </section>
-
     <section
         class="output"
         foreach="log in esPlaygroundLogs"
