@@ -1,17 +1,25 @@
 import {projectID, scripts, scriptURLS} from "./state";
 import {reRender} from "./renderer";
 
-import {Entity, Script} from "entropy-engine";
+import {Entity, Script} from "../../../cdn/ee/index.js";
 
-import {run, ESError, Primitive, ESNamespace, global, Context, ESString} from "entropy-script";
+import {
+	run,
+	ESError,
+	Primitive,
+	ESNamespace,
+	global,
+	Context,
+	ESString
+} from "../../../cdn/es/index.js";
 
-export const scriptTemplate = async (scriptName: string) => {
+export const scriptTemplate = async (scriptName) => {
 	let template = await (await fetch('https://entropyengine.dev/templates/script.txt?c=' + window.genCacheBust())).text();
 	template = template.replace(/NAME/, scriptName);
 	return template;
 };
 
-window.blankScript = (nameInputID: string) => {
+window.blankScript = (nameInputID) => {
 	const name = $(`#${nameInputID}`).val()?.toString();
 
 	// name validity checks
@@ -31,7 +39,7 @@ window.blankScript = (nameInputID: string) => {
 		});
 };
 
-export function mapScripts<T>(handler: (name: string, script: string) => T): T[] {
+export function mapScripts(handler) {
 	const value = [];
 	for (let name in scripts) {
 		value.push(handler(name, scripts[name]));
@@ -51,7 +59,7 @@ export async function loadScripts () {
 	}
 }
 
-export async function runESScript (path: string, env: Context): Promise<ESError | Primitive> {
+export async function runESScript (path, env) {
 	let scriptRaw = await (await fetch(`${path}?${window.genCacheBust()}`)).text();
 	let name = window.nameFromScriptURL(path);
 	scriptURLS[name] = path;
@@ -72,7 +80,7 @@ export async function runESScript (path: string, env: Context): Promise<ESError 
 export async function reloadScriptsOnEntities () {
 	const scriptPaths = await window.request('find-scripts', window.apiToken);
 
-	let scriptPrimitives: {[k: string]: ESNamespace} = {};
+	let scriptPrimitives = {};
 
 	for (let scriptPath of scriptPaths) {
 
@@ -97,7 +105,7 @@ export async function reloadScriptsOnEntities () {
 		for (let component of sprite.components) {
 			if (component.type !== 'Script') continue;
 
-			const script = component as Script;
+			const script = component;
 			script.script = scriptPrimitives[script.name];
 		}
 	}

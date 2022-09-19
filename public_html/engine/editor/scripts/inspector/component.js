@@ -4,7 +4,7 @@ import {_componentProperty_} from "./property";
 
 import { Component, Script } from "entropy-engine";
 
-export const _component_ = (component: Component, i: JQuery) => {
+export const _component_ = (component, i) => {
 	if (!state.selectedEntity) {
 		throw 'no selected entity';
 	}
@@ -45,7 +45,7 @@ export const _component_ = (component: Component, i: JQuery) => {
 	for (let property of component['public']) {
 		let name = component.type;
 		if (name === 'Script') {
-			name = (component as Script).name || component.subtype;
+			name = (component).name || component.subtype;
 		}
 
 		componentHTML.append(`

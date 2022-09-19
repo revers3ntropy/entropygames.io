@@ -1,7 +1,7 @@
 import {state, scripts} from '../state';
 import {mapScripts} from "../scripts";
 
-export const renderScripts = (divID: string) => {
+export const renderScripts = (divID) => {
     const s = $(`#${divID}`);
 
     s.html(`

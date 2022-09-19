@@ -1,49 +1,59 @@
 import * as core from './main.js';
+import { ROOT_PATH } from "./main.js";
 
 /**
- * @param {string} message - is parsed as HTML
+ * @param {string} message is parsed as HTML
+ * @param {string?} className
  */
-export async function showError(message) {
-    await waitForReady();
+export function showMessage(message, className = '') {
+    waitForReady().then(() => {
+        console.error(message);
+        if (!state.$error) {
+            state.$error = document.createElement('div');
+            state.$error.classList.add('message-container');
+            document.body.appendChild(state.$error);
+        }
 
-    if (!state.$error) {
-        state.$error = document.createElement('div');
-        state.$error.id = 'error-container';
-        document.body.appendChild(state.$error);
-    }
+        let myErrId = state.currentNotificationId++;
 
-    let myErrId = state.currentNotificationId++;
+        while (state.visibleNotifications.length > core.MAX_NOTIFICATIONS) {
+            let id = state.visibleNotifications.shift();
+            document.getElementById(`message-${id}`).remove();
+        }
 
-    while (state.visibleNotifications.length > core.MAX_NOTIFICATIONS) {
-        let id = state.visibleNotifications.shift();
-        document.getElementById(`error-${id}`).remove();
-    }
+        let errorMessage = document.createElement('div');
+        errorMessage.innerHTML = `
+            ${message}
+            <i
+                onclick="this.parentElement.remove()"
+                style="font-size: 18px; cursor: pointer;"
+                class="close icon"
+            ></i>
+        `;
 
-    let errorMessage = document.createElement('div');
-    errorMessage.innerHTML = `
-        ${message}
-        <span
-        	onclick="this.parentElement.remove()"
-        	style="font-size: 18px"
-        >&times;</span>
-    `;
-    errorMessage.classList.add('error');
-    errorMessage.id = `error-${myErrId}`;
-    state.$error.appendChild(errorMessage);
-    state.visibleNotifications.push(myErrId);
+        const classes = className.split(' ').filter(Boolean);
+        errorMessage.classList.add('message', ...classes);
+        errorMessage.id = `message-${myErrId}`;
+        state.$error.appendChild(errorMessage);
+        state.visibleNotifications.push(myErrId);
 
-    setTimeout(() => {
-        errorMessage.remove();
-        state.visibleNotifications = state.visibleNotifications.filter(
-            id => id !== myErrId
-        );
-    }, core.NOTIFICATION_SHOW_TIME);
+        setTimeout(() => {
+            errorMessage.remove();
+            state.visibleNotifications = state.visibleNotifications.filter(
+                id => id !== myErrId
+            );
+        }, core.NOTIFICATION_SHOW_TIME);
+    });
+}
+
+export function showError(message) {
+    showMessage(message, 'error');
 }
 
 /**
  * Shows an error from a code (a string)
  * @param {string} code
- * @returns {Promise<void>}
+ * @returns {void}
  */
 export function showErrorFromCode(code) {
     return showError(
@@ -80,8 +90,8 @@ export async function loadFooter($footer) {
         `${core.ROOT_PATH}/assets/html/footer.html`
     );
     state.$footer.innerHTML = await footerHTMLRes.text();
-    reservoir.reload($footer);
-    updateTheme();
+
+    R.reload($footer);
 }
 
 /**
@@ -95,11 +105,24 @@ export async function loadNav($nav) {
     const navRes = await fetch(`${core.ROOT_PATH}/assets/html/nav.html`);
     $nav.innerHTML = await navRes.text();
 
-    reservoir.reload($nav);
-    updateTheme();
+    R.reload($nav);
 }
 
 export async function domIsLoaded() {
+
+    // before rest so less specific than my styles
+    document.head.innerHTML = `
+            <link rel="stylesheet" href="${ROOT_PATH}/assets/lib/semantic/semantic.min.css" media="print" onload="this.media='all'">
+    ` + document.head.innerHTML;
+
+    R.hook('preHydrate', $el => {
+        if (theme() === 'dark') {
+            $el?.classList?.add('inverted');
+        } else {
+            $el?.classList?.remove('inverted');
+        }
+    });
+
     updateTheme();
 
     state.documentLoaded = true;
@@ -116,17 +139,19 @@ export function scrollToTop() {
     document.body.scrollTop = document.documentElement.scrollTop = 0;
 }
 
+export function theme () {
+    return getTheme() ||
+        (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+}
 /**
  * Sets the data-theme attribute of the document body from the value stored in localStorage or the theme preference
  */
-export function updateTheme($el=document) {
-    const theme =
-        getTheme() ||
-        (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-    document.body.setAttribute('data-theme', theme);
+export function updateTheme() {
 
-    $el.querySelectorAll('*').forEach(el => {
-        if (theme === 'dark') {
+    document.body.setAttribute('data-theme', theme());
+
+    document.querySelectorAll('*').forEach(el => {
+        if (theme() === 'dark') {
             el.classList.add('inverted');
         } else {
             el.classList.remove('inverted');

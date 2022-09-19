@@ -1,3 +1,7 @@
 #!/bin/bash
 
-lsof -n -i :9080 | grep LISTEN
+if (( $# == 0 )); then
+    echo $(lsof -n -i :9080 | grep LISTEN);
+else
+    echo $(lsof -n -i :"$1" | grep LISTEN);
+fi

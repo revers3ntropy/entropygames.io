@@ -1,6 +1,6 @@
 import {comment} from "../../../../scripts/globalComponents";
 
-export function renderComments (div: JQuery) {
+export function renderComments (div) {
 
 	div.html(`
 		<p>
@@ -26,7 +26,7 @@ export function renderComments (div: JQuery) {
 		<footer style="height: 100px"></footer>
 	`);
 
-	async function refreshComments (username: string) {
+	async function refreshComments (username) {
 		const comments = await window.request('get-comments', {
 			public: false
 		})

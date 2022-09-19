@@ -1,23 +1,28 @@
 #!/bin/bash
 
-start=`date +%s`
+start=`date +%s`;
 
-bin/kill-server 8091;
+bin/migrate test &
 
 (
   cd server || exit;
   webpack;
-)
-
+) &
 (
   cd test || exit;
   webpack;
+) & wait;
+
+node --enable-source-maps server --logTo=test.log --logLevel=4 --dbLogLevel=2 --env=test.env &
+(
+    sleep .5;
+    node --enable-source-maps test "$@"
 )
 
-node --enable-source-maps test
+bin/kill-server 9081
 
 end=`date +%s.%N`
 
 runtime=$( echo "$end - $start" | bc -l )
 
-echo "Deployment total time: $runtime"
+echo "Test total time: $runtime s"

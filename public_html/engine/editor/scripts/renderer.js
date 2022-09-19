@@ -14,7 +14,7 @@ import { Scene, v2, Camera, Systems, Entity, rect, renderDebug, renderSelectedOu
  * @param {MouseEvent} event
  * @param {string} content
  */
-export function showPopUpMenu (event: MouseEvent, content: string) {
+export function showPopUpMenu (event, content) {
     setTimeout(() => {
         const menu = $('#pop-up');
 
@@ -33,7 +33,7 @@ export function showPopUpMenu (event: MouseEvent, content: string) {
  * @param {Entity} selectEntity
  * @param {string} content
  */
-export function setRightClick (elementID: string, selectEntity: Entity, content: string) {
+export function setRightClick (elementID, selectEntity, content) {
     document.getElementById(elementID)?.addEventListener('contextmenu', event => {
         setSelected(selectEntity);
         reRender();
@@ -43,7 +43,7 @@ export function setRightClick (elementID: string, selectEntity: Entity, content:
 }
 
 
-export function rightClickOption (name: string, onclick: Function, show=name) {
+export function rightClickOption (name, onclick, show=name) {
     window[`rightclick-${name}`] = onclick;
 
     return (`
@@ -103,7 +103,7 @@ export function reRender () {
 
     if (!ctx) throw 'no ctx';
 
-    function setTabNotActive (tab: JQuery, div: JQuery) {
+    function setTabNotActive (tab, div) {
         tab.hover(() => {
             tab.css('background-color', 'var(--input-hover-bg)');
         }, () => {
@@ -115,7 +115,7 @@ export function reRender () {
         div.css('display', 'none');
     }
 
-    function setTabActive (tab: JQuery, div: JQuery, useInLineDisplay=false) {
+    function setTabActive (tab, div, useInLineDisplay=false) {
         tab.hover(() => {
             tab.css('background-color', 'var(--input-hover-bg)');
         }, () => {

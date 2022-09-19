@@ -2,7 +2,7 @@ import {projectID, state} from '../state';
 import {reRender, rightClickOption, setRightClick} from "../renderer";
 import {cullString} from 'entropy-engine';
 
-const _asset_ = (fileName: string) => `
+const _asset_ = (fileName) => `
 
 	<div id="asset${fileName}" class="asset-container">
 		<div style="
@@ -27,7 +27,7 @@ const _asset_ = (fileName: string) => `
 
 `;
 
-export const renderAssets = async (div: JQuery) => {
+export const renderAssets = async (div) => {
 	if (!state.selectedEntity) throw 'expected a selected entity';
 
 	const projectAssets = await window.request('get-assets', window.apiToken);

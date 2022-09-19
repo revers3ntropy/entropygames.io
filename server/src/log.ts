@@ -1,6 +1,6 @@
 import fs from 'fs';
 import c from 'chalk';
-import { removeColour, tagFuncParamsToString } from './util';
+import { generateUUId, removeColour, tagFuncParamsToString } from './util';
 import { IFlags, query } from './index';
 import mysql from 'mysql2';
 
@@ -74,8 +74,8 @@ class Logger {
     public async logToDB(message: string, from = 'server'): Promise<mysql.OkPacket | undefined> {
         if (!query) return;
         return await query<mysql.OkPacket>`
-            INSERT INTO logs (msg, madeBy)
-            VALUES (${filterForLogging(message)}, ${from})
+            INSERT INTO logs (id, msg, madeBy)
+            VALUES (${await generateUUId()}, ${filterForLogging(message)}, ${from})
         `;
     }
 

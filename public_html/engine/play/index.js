@@ -6,7 +6,7 @@ window.apiToken.project = parseInt(window.urlParam('p') || '0');
 
 const cacheBust = Math.floor(Math.random() * 10**5);
 
-function notAvailable (data: any) {
+function notAvailable (data) {
     window.location.href = `https://entropyengine.dev/accounts/error?type=buildPlayFail&extra=${JSON.stringify(data)}`;
 }
 
@@ -55,7 +55,7 @@ window.request ('has-build')
             </span>
         `);
 
-        async function refreshComments (username: string) {
+        async function refreshComments (username) {
             const comments = await window.request('get-comments', {
                 public: true
             });

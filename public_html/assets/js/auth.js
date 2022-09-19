@@ -30,7 +30,7 @@ export function getSession() {
 }
 
 export async function setSession(id) {
-    return localStorage.set(core.LS_SESSION, id);
+    return localStorage.setItem(core.LS_SESSION, id);
 }
 
 /**
@@ -144,15 +144,15 @@ export async function testApiCon() {
 /**
  * Tries to sign you in as the user with the given Id.
  * @param {string} id
- * @param {string} email
+ * @param {string} username
  * @returns {Promise<void>}
  */
-export async function signInAs(id, email) {
+export async function signInAs(id, username) {
     if (!(await isAdmin())) {
         return;
     }
 
-    if (!confirm(`Sign in as ${email}?`)) {
+    if (!confirm(`Sign in as ${username}?`)) {
         return;
     }
 
@@ -165,7 +165,7 @@ export async function signInAs(id, email) {
     }
 
     await setSession(sessionId);
-    await core.navigate(`/user/?email=${email}`);
+    await core.navigate(`/user/?@=${username}`);
 }
 
 /**

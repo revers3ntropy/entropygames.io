@@ -14,30 +14,28 @@ export interface IGenerateUserRes {
     password: string;
     sessionId: string;
     userId: string;
-    email: string;
+    username: string;
 }
 
 /**
  * Just throws error if something goes wrong, doesn't bother to return an erroneous response.
  * If year is 0 then it makes them an admin.
  */
-export async function generateUser(api: API, year = 10): Promise<IGenerateUserRes> {
-    const email = `${randomFromAlph()}@example.com`;
-
-    const password = randomFromAlph();
+export async function generateUser(api: API, admin: number = 0): Promise<IGenerateUserRes> {
+    const username = randomFromAlph(10);
+    const password = randomFromAlph(10);
 
     let res = await api(`create/users`, {
-        email,
+        username,
         password,
-        year,
-        admin: year === 0
+        admin
     });
     if (res.ok !== true || (res.status !== 200 && res.status !== 201)) {
         throw `create/users/email/password failed: ${JSON.stringify(res)}`;
     }
 
     res = await api(`create/sessions/from-login`, {
-        email,
+        username,
         password,
     });
     if (
@@ -46,8 +44,8 @@ export async function generateUser(api: API, year = 10): Promise<IGenerateUserRe
         typeof res.sessionId !== 'string' ||
         typeof res.userId !== 'string'
     ) {
-        throw `create/sessions/from-login/email/password failed: ${JSON.stringify(res)}`;
+        throw `create/sessions/from-login/username/password failed: ${JSON.stringify(res)}`;
     }
 
-    return { email, password, ...res };
+    return { username, password, ...res };
 }

@@ -4,7 +4,7 @@ import { Camera, v3 } from "entropy-engine";
 const worldSpacePosDiv = $('#world-space-pos');
 const screenSpacePosDiv = $('#screen-space-pos');
 
-export function renderSceneMenu (div: JQuery) {
+export function renderSceneMenu (div) {
 	if (!state.sceneCamera) throw 'no camera';
 	const cameraZoom = state.sceneCamera.getComponent<Camera>('Camera').zoom.toFixed(2) ?? 'N/A';
 	const cameraPos = state.sceneCamera.transform.position ?? v3.zero;

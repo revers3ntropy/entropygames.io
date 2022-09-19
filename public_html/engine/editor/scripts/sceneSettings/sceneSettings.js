@@ -1,12 +1,12 @@
 import { colour, Scene } from "entropy-engine";
 
-window.changeSceneSettings = (key: string, id: string) => {
+window.changeSceneSettings = (key, id) => {
 	const value = $(`#${id}`).val();
-	let toChange: any = Scene.activeScene.settings;
+	let toChange = Scene.activeScene.settings;
 	toChange[key] = value;
 }
 
-function _colour_ (key: string, value: colour, id: string) {
+function _colour_ (key, value, id) {
 	return `
 		<input 
 			type="color" 
@@ -17,7 +17,7 @@ function _colour_ (key: string, value: colour, id: string) {
 	`;
 }
 
-function _numberOrString_ (key: string, value: string, id: string, isNum: boolean) {
+function _numberOrString_ (key, value, id, isNum) {
 	return `
 		<input 
 			type="${isNum ? 'number' : 'text'}"
@@ -33,11 +33,6 @@ function _setting_ ({
 	key,
 	showName = key,
 	type = typeof settings[key]
-}: {
-	settings: any,
-	key: string,
-	showName?: string,
-	type?: string
 }) {
 
 	const id = `input-${key}-${showName}`;
@@ -61,7 +56,7 @@ function _setting_ ({
 	return showValue;
 }
 
-const settingShowNames: {[k: string]: string} = {
+const settingShowNames = {
 	license: 'License',
 	version: 'Version',
 	gameName: 'Game Name',
@@ -78,7 +73,7 @@ const excludedSettings = [
 	'canvasID',
 ]
 
-export function renderSceneSettings (div: JQuery) {
+export function renderSceneSettings (div) {
 	const settings = Scene.activeScene.settings;
 
 	div.html(``);

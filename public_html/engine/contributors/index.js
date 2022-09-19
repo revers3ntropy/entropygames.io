@@ -3,7 +3,7 @@ import * as Chartist from 'chartist';
 const currentTime = Math.round(new Date().getTime()/1000);
 
 fetch(`https://entropyengine.dev:50001/all-contributions/${window.urlParam('p')}`)
-    .then(async (data: any) => {
+    .then(async (data) => {
         data = await data.json();
 
         if (data.length < 1) return;
@@ -14,7 +14,7 @@ fetch(`https://entropyengine.dev:50001/all-contributions/${window.urlParam('p')}
 
         let series = [];
 
-        let perPersonSeries: any = {};
+        let perPersonSeries = {};
 
         for (const save of data) {
             const secondsSince = currentTime - save.date;
@@ -112,10 +112,7 @@ fetch(`https://entropyengine.dev:50001/all-contributions/${window.urlParam('p')}
                     low: 0,
                 });
             }
-
             window.scrollTo(0, 0);
         }
-
         doForPeople();
-
     });

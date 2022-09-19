@@ -2,7 +2,7 @@ import {reRender, rightClickOption, setRightClick} from "../renderer";
 import {setSelected, state} from "../state";
 import { Camera, Entity, v3, Transform, CircleCollider, CircleRenderer, RectCollider, RectRenderer } from "entropy-engine";
 
-export function setRightClickAddEntityMenu(divID: string) {
+export function setRightClickAddEntityMenu(divID) {
 	if (!state.selectedEntity) throw 'no selected entity';
 	setRightClick(divID, state.selectedEntity, `
         <p style="

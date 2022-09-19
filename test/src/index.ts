@@ -3,8 +3,8 @@ import fetch from 'node-fetch';
 import commandLineArgs, { CommandLineOptions } from 'command-line-args';
 import childProcess from 'child_process';
 import now from 'performance-now';
+import { config } from "dotenv";
 
-import setup from './setup';
 import Test from './framework';
 
 import './tests/server.spec';
@@ -24,7 +24,7 @@ export type testExecutor = (
 ) => Promise<boolean | Error | string>;
 
 const adminPassword = 'password';
-const adminEmail = 'admin@example.com';
+const adminUsername = 'admin';
 
 let adminSessionId: string | null = null;
 
@@ -39,7 +39,7 @@ async function api(path: string, body: Record<string, any> = {}): Promise<any> {
     if (!body.session && body.session !== '') {
         if (adminSessionId === null) {
             let res = await api(`create/sessions/from-login`, {
-                email: adminEmail,
+                username: adminUsername,
                 password: adminPassword,
                 session: '',
             });
@@ -117,7 +117,7 @@ export async function deploy(flags: commandLineArgs.CommandLineOptions): Promise
         return t.toFixed(2);
     };
 
-    await setup(flags);
+    config({ path: './server/test.env' });
 
     const testRes = await Test.testAll(api, flags);
     console.log(testRes.str());

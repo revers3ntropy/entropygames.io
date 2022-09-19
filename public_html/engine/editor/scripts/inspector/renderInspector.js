@@ -7,7 +7,6 @@ import {_component_} from "./component";
 
 // importing all components
 import {
-    Component,
     Script,
     CircleCollider, RectCollider,
     Body,
@@ -15,11 +14,9 @@ import {
     GUIBox, GUICircle, GUIImage, GUIPolygon, GUIRect, GUIText, GUITextBox,
     Camera
 } from 'entropy-engine';
-
 Script;
 
-
-const allComponents: {[k: string]: (new (...args: any[]) => Component)[]} = {
+const allComponents = {
     'General': [
         Camera
     ],
@@ -100,7 +97,7 @@ export function reRenderInspector () {
 
         if ($('.add-component-popup').length) return;
 
-        window.addComponent = (type: string) => {
+        window.addComponent = (type) => {
             try {
                 state.selectedEntity?.addComponent(new (eval(type))({}));
             } catch(e) {
@@ -125,7 +122,7 @@ export function reRenderInspector () {
             reRender();
         };
 
-        const _button_ = (text: string) => (`
+        const _button_ = (text) => (`
             <div>
                 <button class='empty-button' onclick="window.addComponent(\`${text}\`)">
                     ${text}

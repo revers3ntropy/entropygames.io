@@ -22,9 +22,14 @@ const scriptFetchInit = {
 // new nav bar, remove old one
 $('nav').html('');
 
-async function initFromFiles (id: number) {
+/**
+ * @param {number} id
+ * @param id
+ * @returns {Promise<void>}
+ */
+async function initFromFiles (id) {
     const path = `../projects/${id}`;
-    const config: {[k: string]: any} = {};
+    const config = {};
 
     // get and init the
     const data_ = await fetch(path + `/index.json?c=${window.genCacheBust()}`, scriptFetchInit);
@@ -58,8 +63,8 @@ async function initFromFiles (id: number) {
     ee.Scene.active = parseInt(sessionStorage.sceneID) || 0;
 }
 
-async function checkCredentials (): Promise<number> {
-    return new Promise(resolve => {
+async function checkCredentials () {
+    return await new Promise(resolve => {
         window.mustBeSignedIn(async () => {
             const accessLevel = (await window.request('get-project-access', window.apiToken))['accessLevel'];
 

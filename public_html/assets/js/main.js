@@ -2,8 +2,7 @@
 // Utility script imported by all pages
 import '../../cdn/node_modules/hydrate-web/index.js';
 
-const R = window.reservoir;
-window.R = R;
+window.R = window.reservoir;
 
 // Global constants and variables
 export const
@@ -90,6 +89,17 @@ export * from './backendAPI.js';
 export * from './dom.js';
 
 (async () => {
+    ENV = detectEnv();
+    API_ROOT = API_ROUTES[ENV];
+    ROOT_PATH = SITE_ROOTS[ENV];
+
+    import('../../assets/lib/jquery/index.js')
+        .then(() => {
+            import('../../assets/lib/semantic/semantic.min.js')
+                .then();
+        });
+
+
     // main function - don't put top-level code anywhere else
     if (document.readyState === 'complete') {
         await domIsLoaded();
@@ -167,11 +177,6 @@ export async function init({
     state.$nav = document.querySelector(`nav`);
     state.$footer = document.querySelector(`footer`);
     state.$main = document.querySelector(`main`);
-
-    // before rest so less specific than my styles
-    document.head.innerHTML = `
-        <link rel="stylesheet" href="${ROOT_PATH}/assets/lib/semantic/semantic.min.css" media="print" onload="this.media='all'">
-    ` + document.head.innerHTML;
 
     await loadNav(state.$nav);
     await loadFooter(state.$footer);

@@ -1,5 +1,3 @@
-import {} from '../../types/types';
-
 const errorDIV = $('#error');
 const projectID = window.urlParam('p');
 $('back').attr('href', (_, v) => v + projectID);

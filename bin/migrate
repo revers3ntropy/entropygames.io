@@ -7,9 +7,7 @@ die () {
     exit 1
 }
 
-[ "$#" -eq 1 ] || die "1 argument required, $# provided"
-
-if [ "$1" = "local" ]; then
+if [ "$#" -eq 0 ] || [ "$1" = "local" ] || [ "$1" = "dev" ]; then
   mysql -u root << eof
       DROP DATABASE IF EXISTS entropygames_dev;
       CREATE DATABASE entropygames_dev
@@ -18,9 +16,20 @@ eof
   mysql -u root entropygames_dev < ./sql/schema.sql
 fi
 
+if [ "$1" = "test" ]; then
+  mysql -u root << eof
+      DROP DATABASE IF EXISTS egiotesting;
+      CREATE DATABASE egiotesting
+eof
+
+  mysql -u root egiotesting < ./sql/schema.sql
+fi
+
+[ "$#" -eq 1 ] || die "1 argument required, $# provided"
+
 
 end=`date +%s.%N`
 
 runtime=$( echo "$end - $start" | bc -l )
 
-echo "Deployment total time: $runtime"
+echo "Migrated DB '$1' destructively in: $runtime"

@@ -4,45 +4,34 @@
     <meta charset="UTF-8">
     <title>Entropy Games</title>
     <script defer type="module">
-	    import { GITHUB_AUTH_CLIENT_ID, init } from '../../assets/js/main.js';
+	    import { getURLParam, init, navigate, SS_GITHUB_AUTH_STATE } from '../../assets/js/main.js';
+	    import { api } from "../../assets/js/backendAPI.js";
+	    import { setSession } from "../../assets/js/auth.js";
         await init({ rootPath: '../..' });
 
-        //https://entropygames.io/auth/github-sign-in-redirect/?code=c6e75b8e058b941ab58c&state=5itmyevdmktn5gibqqcx
+        const code = getURLParam('code');
+        const stateFromGH = getURLParam('state');
 
-        const code = R.get('code');
-        const state = R.get('state');
+        const stateTemp = sessionStorage.getItem(SS_GITHUB_AUTH_STATE);
+        sessionStorage.removeItem(SS_GITHUB_AUTH_STATE);
 
-        const stateTemp = sessionStorage.getItem('github-oauth-state-temp');
-        sessionStorage.removeItem('github-oauth-state-temp');
+        if (stateFromGH === stateTemp) {
+		    const { sessionId, error } = await api('create/sessions/from-github-oauth', {
+			    code,
+			    state: stateFromGH
+		    });
 
-        if (state !== stateTemp) {
-            alert('State mismatch');
-            throw 'State mismatch';
+			if (!sessionId) {
+				console.log(sessionId, error);
+				throw new Error('No session ID returned from server');
+			}
+
+		    setSession(sessionId);
+
+		    await navigate('../..');
+        } else {
+            await navigate('../sign-in');
         }
-
-		const accessTokenRes = await fetch('https://github.com/login/oauth/access_token', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-	            'Accept': 'application/json'
-            },
-            body: JSON.stringify({
-                client_id: GITHUB_AUTH_CLIENT_ID,
-                client_secret: 'c6e75b8e058b941ab58c',
-                code,
-                state
-            })
-        });
-
-        request(`sign-in-with-github`, {
-	        code: urlParams.get('code')
-        }).then(res => {
-	        if (!res.id) {
-		        console.error('Invalid ID: ' + res.id);
-		        return;
-	        }
-	        localStorage.setItem('auth-id', res.id);
-        });
 
     </script>
 </head>

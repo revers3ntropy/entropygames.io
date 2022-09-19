@@ -19,12 +19,10 @@ body:not([data-theme]) {
     --anim-really-slow: 600ms;
 }
 
-/*
-    Dark mode styles, also default.
- */
+/*  Dark mode styles, also default.  */
 :root,
 [data-theme='dark'] {
-    --nav-colour: transparent;
+    --nav-colour: #2a2a2a;
     --nav-border-bottom: transparent;
 
     --label-bg: #c0c0c0;
@@ -48,6 +46,8 @@ body:not([data-theme]) {
 }
 
 [data-theme='light'] {
+    --nav-colour: #e0e0e0;
+
     --label-bg: #c0c0c0;
     --label-text: #000000;
     --label-border: #e0e0e0;
@@ -74,16 +74,16 @@ body:not([data-theme]) {
     transition: var(--anim-speed);
 }
 
-/* scrollbar */
+/* -------------------------------------------------- SCROLLBAR ---------------------------------------------------- */
 ::-webkit-scrollbar {
     width: 10px;
 }
-
 ::-webkit-scrollbar-track {
-    background: transparent;
+    background: var(--bg);
 }
 ::-webkit-scrollbar-thumb {
     background: var(--text-lighter);
+    border-radius: 10px;
 }
 ::-webkit-scrollbar-thumb:hover {
     background: var(--text);
@@ -98,25 +98,26 @@ main {
     padding: 0;
     margin: 0;
     background: var(--bg);
-}
-
-main {
     min-height: calc(100vh - var(--nav-height));
-    padding: 10px;
+
     overflow-x: hidden;
 }
 
-html,
-body,
 main {
-    margin: 0;
-    min-height: calc(100% - var(--nav-height));
+    padding: 10px;
 }
 
 .flex-center {
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.grid-center-fill {
+    display: grid;
+    place-items: center;
+    width: 100%;
+    height: 100%;
 }
 
 .vertical-flex-center {
@@ -257,33 +258,6 @@ pre code {
     border: none;
 }
 
-.ui.inverted.button,
-.ui.inverted.button:hover,
-.ui.inverted.button.primary,
-.ui.inverted.button.primary:hover{
-    box-shadow: none !important;
-    background: var(--bg-accent);
-}
-.ui.inverted.button:hover,
-.ui.button {
-    background: var(--accent) !important;
-    color: var(--text) !important;
-    border: 2px solid var(--accent);
-}
-.ui.button:hover {
-    background: var(--bg-accent) !important;
-}
-.ui.inverted.button.primary {
-    color: var(--accent);
-    border: 2px solid var(--accent);
-    font-size: 17px;
-    padding: 10px 20px;
-}
-.ui.inverted.button:hover {
-    background: var(--accent) !important;
-    color: var(--text) !important;
-}
-
 @media only screen and (max-aspect-ratio: 6/5) {
     * {
         transition: 0ms;
@@ -308,7 +282,41 @@ pre code {
     }
 }
 
+/* ------------------ Chartist Overrides -------------------- */
 .ct-label {
     color: var(--text) !important;
     fill: var(--text) !important;
+}
+
+/* ------------------ Semantic UI overrides ------------------ */
+.ui.inverted.button,
+.ui.inverted.button:hover,
+.ui.inverted.button.primary,
+.ui.inverted.button.primary:hover{
+    box-shadow: none !important;
+    background: var(--bg-accent);
+}
+.ui.button.primary {
+    background: var(--accent) !important;
+    color: var(--text) !important;
+    border: 2px solid var(--accent) !important;
+}
+.ui.button.primary:hover {
+    background: var(--bg-accent) !important;
+    color: var(--accent) !important;
+}
+.ui.button.primary svg {
+    fill: var(--accent) !important;
+}
+.ui.inverted.button.primary {
+    border: 2px solid var(--accent) !important;
+    font-size: 17px !important;
+}
+.ui.inverted.button.primary:hover {
+    color: var(--accent) !important;
+    background: var(--bg-accent) !important;
+}
+.ui.inverted.button:hover {
+    background: var(--accent) !important;
+    color: var(--text) !important;
 }

@@ -17,9 +17,4 @@
 	npm i;
 ) & wait
 
-mysql -u root << eof
-    DROP DATABASE IF EXISTS entropygames_dev;
-    CREATE DATABASE entropygames_dev
-eof
-
-mysql -u root entropygames_dev < ./sql/schema.sql
+bin/migrate dev;

@@ -1,9 +1,10 @@
 import route from '../index';
 import log from '../log';
-import { AUTH_ERR, authLvl, generateUUId, isAdmin } from '../util';
+import { AUTH_ERR, authLvl, generateUUId, isAdmin, isJson } from '../util';
 import emailValidator from 'email-validator';
 import * as notifications from '../notifications';
 import type mysql from 'mysql2';
+import { default as axios } from 'axios';
 
 /**
  * Gets the authorisation level of a session Id
@@ -31,18 +32,18 @@ route('get/sessions/active', async ({ query, body }) => {
 
     return {
         data: await query`
-        SELECT 
-            users.email,
-            users.id as userId,
-            sessions.id,
-            UNIX_TIMESTAMP(sessions.opened) as opened
-        FROM sessions, users
-        WHERE
-            sessions.userId = users.id
-            AND UNIX_TIMESTAMP(sessions.opened) + sessions.expires > UNIX_TIMESTAMP()
-            AND sessions.active = 1
-        ORDER BY opened DESC
-    `
+            SELECT 
+                users.email,
+                users.id as userId,
+                sessions.id,
+                UNIX_TIMESTAMP(sessions.opened) as opened
+            FROM sessions, users
+            WHERE
+                sessions.userId = users.id
+                AND UNIX_TIMESTAMP(sessions.opened) + sessions.expires > UNIX_TIMESTAMP()
+                AND sessions.active = 1
+            ORDER BY opened DESC
+        `
     };
 });
 
@@ -57,10 +58,10 @@ route('get/sessions/active', async ({ query, body }) => {
  */
 route('create/sessions/from-login', async ({ query, body }) => {
     // password in plaintext
-    const { email = '', password = '', expires = 86400 } = body;
+    const { username = '', password = '', expires = 86400 } = body;
 
-    if (!email || !password) {
-        return 'Missing email or password';
+    if (!username || !password) {
+        return 'Missing username or password';
     }
 
     if (typeof expires !== 'number' || !Number.isInteger(expires)) {
@@ -73,21 +74,17 @@ route('create/sessions/from-login', async ({ query, body }) => {
         return 'Session must not have already expired';
     }
 
-    // don't bother validating email here,
-    // makes it slightly quickly for slightly less info to user
-    // invalid emails can't be added to the database anyway
-
     const res = await query`
         SELECT id
         FROM users
-        WHERE email = ${email}
+        WHERE username = ${username}
             AND password = SHA2(CONCAT(${password}, salt), 256);
     `;
 
     if (!res[0]) return 'Invalid email or password';
     if (res.length > 1) {
         // don't tell the user about this, it's a security issue
-        log.error`Multiple users found with email ${email}`;
+        log.error`Multiple users found with username ${username}`;
         return 'Invalid email or password';
     }
 
@@ -194,33 +191,111 @@ route('create/sessions/from-github-oauth', async ({ query, body }) => {
         return 'Missing code or state';
     }
 
-    const accessTokenRes = await fetch('https://github.com/login/oauth/access_token', {
+    if (typeof code !== 'string' || typeof state !== 'string') {
+        return 'Invalid code or state';
+    }
+
+    const accessTokenRes = await axios({
+        url: 'https://github.com/login/oauth/access_token',
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-        },
-        body: JSON.stringify({
+        data: {
             client_id: process.env.GITHUB_AUTH_CLIENT_ID,
             client_secret: process.env.GITHUB_AUTH_CLIENT_SECRET,
             code,
             state
-        })
-    });
-
-    const { access_token, scope, token_type } = await accessTokenRes.json();
-
-    if (!access_token) {
-        return 'Invalid code';
-    }
-
-    const userRes = await fetch('https://api.github.com/user', {
+        },
         headers: {
-            'Authorization': `Bearer ${access_token}`
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
         }
     });
 
-    const user = await userRes.json();
+    if (typeof accessTokenRes.data !== 'object') {
+        log.error(`Invalid response from github: ${JSON.stringify(accessTokenRes.data)}`);
+        return 'Invalid response from Github';
+    }
+
+    const { access_token, token_type, error } = accessTokenRes.data;
+
+    if (error) return error;
+    if (token_type.toLowerCase() !== 'bearer') {
+        log.error(`Invalid token type from github: ${token_type}`);
+        return 'Invalid token type';
+    }
+
+    if (!access_token) {
+        log.error(`No access token from github: ${accessTokenRes.data}`);
+        return 'Invalid code';
+    }
+
+    const userRes = await axios({
+        url: 'https://api.github.com/user',
+        method: 'GET',
+        headers: {
+            'Authorization': `Bearer ${access_token}`,
+            'Accept': 'application/json'
+        }
+    });
+
+    if (typeof userRes.data !== 'object') {
+        log.error(`Invalid response from github: ${JSON.stringify(userRes.data)}`);
+        return 'Invalid response from Github';
+    }
+    const user = userRes.data;
+
+    const username = user.login;
+    const ghId = user.id;
+
+    const res = await query`
+        SELECT id
+        FROM users
+        WHERE gh_id = ${ghId}
+    `;
+    // already has account with that GitHub ID
+    if (res.length) {
+        const userId = res[0].id;
+        const sessionId = await generateUUId();
+
+        await query`
+            INSERT INTO sessions (id, userId)
+            VALUES (${sessionId}, ${userId});
+        `;
+
+        return { sessionId, userId };
+    }
+
+    // create new account
+    const userId = await generateUUId();
+    const sessionId = await generateUUId();
+
+    // make sure username is unique
+    let i = 0;
+    while (true) {
+        const res = await query`
+            SELECT id
+            FROM users
+            WHERE username = ${username + (i ? i : '')}
+        `;
+        if (!res.length) break;
+        i++;
+
+        // if we've tried 1000 times, something is wrong
+        // prevents infinite loop
+        if (i > 1000) {
+            return 'Could not find a unique username';
+        }
+    }
+
+    await query`
+        INSERT INTO users (id, username, gh_id, gh_tok)
+        VALUES (${userId}, ${username + (i ? i : '')}, ${ghId}, ${access_token});
+    `;
+    await query`
+        INSERT INTO sessions (id, userId)
+        VALUES (${sessionId}, ${userId});
+    `;
+
+    return { sessionId, userId };
 });
 
 /**

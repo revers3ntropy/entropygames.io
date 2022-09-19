@@ -8,10 +8,10 @@ import {
     generateUUId,
     idFromSession,
     isAdmin,
-    isLoggedIn,
-    passwordHash,
+    passwordHash, userFromSession,
     validPassword
 } from "../util";
+import log from "../log";
 
 /**
  * @admin
@@ -21,141 +21,82 @@ import {
  * @param sessionId
  */
 route('get/users', async ({ query, body }) => {
-    if (!await isLoggedIn(body, query)) return AUTH_ERR;
-
-    const { userId = '', email = '', sessionId = '', session } = body;
-
-    if (typeof session !== 'string') return AUTH_ERR;
+    const { userId = '', email = '', username = '', sessionId = '' } = body;
 
     if (sessionId) {
-        if (userId) return `Invalid body: cannot specify both 'session' and 'id'`;
-        if (email) return `Invalid body: cannot specify both 'session' and 'email'`;
-
-        const data = await query`
-            SELECT
-                users.id,
-                users.name,
-                users.email,
-                users.admin
-            FROM users, sessions
-            WHERE sessions.id = ${sessionId}
-                AND sessions.userId = users.id
-                AND UNIX_TIMESTAMP(sessions.opened) + sessions.expires > UNIX_TIMESTAMP()
-                AND sessions.active = 1
-        `;
-
-        if (!data.length)
-            return {
-                status: 406,
-                error: 'User not found'
-            };
-
-        return data[0];
+        if (typeof sessionId !== 'string') {
+            return 'Invalid session Id';
+        }
+        if (userId || email || username) {
+            return 'Cannot specify userId, email or username with sessionId';
+        }
+        const res = await userFromSession(query, sessionId);
+        if (!res) return AUTH_ERR;
+        return res;
     }
 
-    if (email) {
-        if (userId) return `Invalid body: cannot specify both 'email' and 'id'`;
-        if (!(await isLoggedIn(body, query))) return AUTH_ERR;
+    let res: any = await query`
+        SELECT
+            id,
+            username,
+            name,
+            email,
+            email_verified,
+            admin,
+            UNIX_TIMESTAMP(created) as created
+        FROM users
+        WHERE
+                ((id = ${userId})           OR ${!userId})
+            AND ((email = ${email})         OR ${!email})
+            AND ((username = ${username})    OR ${!username})
+            
+        ORDER BY admin, created
+    `;
 
-        const { email } = body;
-
-        if (!email) return 'No email';
-
-        const data = await query`
-            SELECT 
-                id,
-                email,
-                admin,
-                name
-            FROM users
-            WHERE email = ${email}
-        `;
-        if (!data[0])
-            return {
-                status: 406,
-                error: 'User not found'
-            };
-
-        const user = data[0];
-
-        // censor the data if they don't have access
-        if (!(await isAdmin(body, query))) {
-            const id = await idFromSession(query, session);
-            if (id !== user.id) {
-                delete user.id;
-            }
+    if (username || userId) {
+        if (res.length === 0) {
+            return 'User not found';
+        }
+        if (res.length > 1) {
+            log.error('Multiple users found for username or id');
+            return 'Internal Error';
         }
 
-        return user;
+        res = res[0];
+        if (!await isAdmin(body, query)) {
+            const user = await userFromSession(query, body.session);
+            if (!user || res['userId'] === user['id']) {
+                delete res['id'];
+                delete res['email'];
+                delete res['email_verified'];
+                delete res['name'];
+            }
+        }
+        return res;
+
+    } else {
+        if (!(await isAdmin(body, query))) {
+            const user = await userFromSession(query, body.session);
+            if (!user) return AUTH_ERR;
+            if (!user['id']) return AUTH_ERR;
+
+            if (Array.isArray(res)) {
+                for (let i = 0; i < res.length; i++) {
+                    if (res[i]?.['userId'] === user['id']) {
+                        continue;
+                    }
+
+                    // if the user does not have access to the user,
+                    // remove sensitive information
+                    delete res[i]?.['id'];
+                    delete res[i]?.['email'];
+                    delete res[i]?.['email_verified'];
+                    delete res[i]?.['name'];
+                }
+            }
+        }
+        return { data: res };
     }
-
-    // gets all users
-    if (!userId) {
-        if (!(await isAdmin(body, query))) return AUTH_ERR;
-
-        const data = await query`
-            SELECT 
-                id,
-                email, 
-                name,
-                admin
-            FROM users
-            ORDER BY
-                admin DESC,
-                email
-        `;
-
-        return { data };
-    }
-
-    // user with specific Id
-    const data = await query`
-        SELECT 
-            id,
-            email,
-            admin,
-            name
-        FROM users
-        WHERE id = ${userId}
-    `;
-
-    if (!data.length)
-        return {
-            status: 406,
-            error: 'User not found'
-        };
-
-    return data[0];
-});
-
-/**
- * @admin
- * Gets the details of multiple users from a list of Ids.
- * Ids are delimited by ','
- * @param {string[]} userIds
- */
-route('get/users/batch-info', async ({ query, body }) => {
-    if (!(await isAdmin(body, query))) return AUTH_ERR;
-
-    const { userIds: ids } = body;
-
-    if (!(ids as any)?.length)
-        return {
-            status: 406,
-            error: `Invalid 'userIds' parameter`
-        };
-
-    const data = await query`
-        SELECT 
-            id,
-            admin,
-            name,
-            email
-        FROM users
-        WHERE id IN (${ids})
-    `;
-
-    return { data };
 });
 
 /**
@@ -169,24 +110,24 @@ route('get/users/batch-info', async ({ query, body }) => {
  * @param password
  */
 route('create/users', async ({ query, body }) => {
-    if (!(await isAdmin(body, query))) return AUTH_ERR;
+    let { username = '', password = '', admin=0 } = body;
 
-    let { email = '', password = '', admin=false } = body;
-
-    if (typeof admin !== 'boolean') {
-        return `'Admin' is not a boolean`;
+    if (typeof admin !== 'number') {
+        return `'Admin' is not a number`;
+    }
+    if (admin > 1 || admin < 0) {
+        return `'Admin' must be either 0 or 1`;
+    }
+    if(!await isAdmin(body, query) && admin) {
+        return 'Only admins can create admins';
     }
 
-    if (typeof email !== 'string') {
-        return `Invalid email`;
-    }
-
-    if (!emailValidator.validate(email as string)) {
+    if (typeof username !== 'string') {
         return `Invalid email`;
     }
 
     let currentUser = await query`
-        SELECT id FROM users WHERE email = ${email}
+        SELECT id FROM users WHERE username = ${username}
     `;
     if (currentUser.length) {
         return `User with that email already exists`;
@@ -204,9 +145,9 @@ route('create/users', async ({ query, body }) => {
 
     await query`
         INSERT INTO users
-            (  id,        email,    password,    salt,    admin, name)
+            (  id,        username,    password,    salt,    admin)
         VALUES
-            (${userId}, ${email}, ${passHash}, ${salt}, ${admin}, '')
+            (${userId}, ${username}, ${passHash}, ${salt}, ${admin})
     `;
 
     return { status: 201, userId };
@@ -226,15 +167,15 @@ route('create/users', async ({ query, body }) => {
 route('update/users/admin', async ({ query, body }) => {
     if (!(await isAdmin(body, query))) return AUTH_ERR;
 
-    const { userId = '', admin = false, session: mySession } = body;
+    const { userId = '', admin = 0, session: mySession } = body;
 
     if (!mySession) return 'No session Id found';
     if (typeof mySession !== 'string') {
         return 'Session Id is not a string';
     }
 
-    if (typeof admin !== 'boolean') {
-        return 'Must specify admin in body';
+    if (typeof admin !== 'number') {
+        return 'Must specify number admin in body';
     }
 
     if ((await idFromSession(query, mySession)) === userId)

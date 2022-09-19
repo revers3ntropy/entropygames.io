@@ -1,13 +1,13 @@
 let projectID = window.urlParam('p');
 
-const backButton = <null|HTMLLinkElement>document.getElementById('back');
+const backButton = document.getElementById('back');
 if (backButton) {
 	backButton.href += projectID;
 }
 
 const buildURL = `https://entropyengine.dev/play/?p=${projectID}`;
 
-const playBuildButton = <null|HTMLLinkElement>document.getElementById('play-build');
+const playBuildButton = document.getElementById('play-build');
 if (playBuildButton) {
 	playBuildButton.href = buildURL;
 }

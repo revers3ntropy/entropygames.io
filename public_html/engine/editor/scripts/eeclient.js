@@ -12,10 +12,10 @@ const projectID = urlParams.get('p');
  * @param {(reason: any) => PromiseLike<void>} error
  */
 function localhost (
-	path: string,
-	body: any,
-	success: (value: Response) => Response | PromiseLike<Response | void> | void,
-	error: (reason: any) => PromiseLike<void>
+	path,
+	body,
+	success,
+	error
 ) {
 	try {
 		fetch('http://localhost:5501/'+path, {

@@ -11,7 +11,7 @@ if (!projectID) {
 
 window.apiToken.project = parseInt(projectID);
 
-window.parseBool = (s: string) => s === 'true';
+window.parseBool = (s) => s === 'true';
 
 export const canvasID = 'myCanvas';
 const c = document.getElementById(canvasID);
@@ -26,10 +26,15 @@ if (!ctx) {
 }
 
 // scripts script
-export const scripts: {[k: string]: string} = {};
-export const scriptURLS: {[k: string]: string} = {};
+/** @type {Record<string, string>}*/
+export const scripts = {};
+/** @type {Record<string, string>}*/
+export const scriptURLS = {};
 
-window.switchScripts = (script: string) => {
+/**
+ * @param {string} script
+ */
+window.switchScripts = (script) => {
 	state.currentScript = script;
 	localStorage.currentScript = script;
 	reRender();
@@ -40,13 +45,13 @@ export function numScripts () {
 }
 
 // window state management
-export enum states {
-	sceneView,
-	scriptEditor,
-	gameView,
-	assets,
-	sceneSettings,
-	comments
+export const states = {
+	sceneView: 0,
+	scriptEditor: 1,
+	gameView: 2,
+	assets: 3,
+	sceneSettings: 4,
+	comments: 5
 }
 window.sceneView = states.sceneView;
 window.scriptEditor = states.scriptEditor;
@@ -55,17 +60,7 @@ window.assets = states.assets;
 window.sceneSettings = states.sceneSettings;
 window.comments = states.comments;
 
-export const state: {
-	dragging: boolean,
-	running: boolean,
-	sceneCamera: ee.Entity | null,
-	selectedEntity: ee.Entity | null,
-	window: states,
-	eeReturns: any,
-	currentScript: string,
-	dragStart: ee.v2,
-	dragEnd: ee.v2,
-} = {
+export const state = {
 	window: parseInt(localStorage.statewindow) ?? states.sceneView,
 	eeReturns: {},
 	currentScript: localStorage.currentScript ?? '',
@@ -77,9 +72,9 @@ export const state: {
 	running: false
 };
 
-export const setSelected = (sprite: ee.Entity | null) => void (state.selectedEntity = sprite);
+export const setSelected = (sprite) => void (state.selectedEntity = sprite);
 
-export const setState = async (newState: states) => {
+export const setState = async (newState) => {
 	if (state.window === newState) return;
 
 	await reloadScriptsOnEntities();

@@ -67,7 +67,7 @@ export async function rawAPI(path, body = {}) {
         body.session = core.getSession();
 
         try {
-            res = await fetch(`${core.API_ROOT}/?${path}`, {
+            res = await fetch(`${core.API_ROOT}${path}`, {
                 method: 'POST',
                 mode: 'cors',
                 cache: 'no-cache',

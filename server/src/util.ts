@@ -7,7 +7,6 @@ import { queryFunc } from './sql';
 import crypto from 'crypto';
 import log from "./log";
 import c from "chalk";
-import { flags } from "./index";
 
 /**
  * Object to return from a route if incorrect credentials were provided.
@@ -131,7 +130,7 @@ export async function authLvl(sessionId: string, query: queryFunc) {
 
     const [ user ] = res;
 
-    return user?.['admin'] === 1 ? 2 : 1;
+    return user?.['admin'] + 1 || 0;
 }
 
 /**
@@ -255,15 +254,20 @@ export async function userFromSession(
     const res = await query`
         SELECT
             users.id,
-            users.email,
+            users.gh_id,
+            users.username,
             users.name,
-            users.admin
+            users.email,
+            users.email_verified,
+            users.admin,
+            users.created
         FROM users, sessions
         WHERE
             sessions.userId = users.id
             
             AND sessions.id = ${id}
             AND UNIX_TIMESTAMP(opened) + expires > UNIX_TIMESTAMP()
+            AND sessions.active = 1
     `;
 
     if (!res[0]) return null;

@@ -20,7 +20,7 @@ document.addEventListener('contextmenu', _ => {
     $('#pop-up').css('visibility', 'hidden');
 });
 
-window.onPropertyChange = (id: string, componentName: string, componentPropertyChain: string[], parser: (v: string) => any) => {
+window.onPropertyChange = (id, componentName, componentPropertyChain, parser) => {
     let value = $(`#${id}`).val()?.toString() || '';
 
     let component;
@@ -30,7 +30,7 @@ window.onPropertyChange = (id: string, componentName: string, componentPropertyC
         component = state.selectedEntity?.getComponent(componentName);
     }
 
-    let toChange: any = component;
+    let toChange = component;
     for (let i = 0; i < componentPropertyChain.length-1; i++) {
         toChange = toChange[componentPropertyChain[i]];
     }
@@ -46,7 +46,7 @@ window.onPropertyChange = (id: string, componentName: string, componentPropertyC
     reRender();
 };
 
-window.setParent = (id: string | number) => {
+window.setParent = (id) => {
     const name = $(`#${id}`).val();
     state.selectedEntity?.transform.setParentDirty(window.findNodeWithName(name));
 
@@ -112,7 +112,7 @@ canvas.onwheel = event => {
         throw 'no camera found';
     }
 
-    const cam = state.sceneCamera.getComponent<Camera>('Camera');
+    const cam = state.sceneCamera.getComponent('Camera');
 
     cam.zoom *= 1 + (event.deltaY * -0.0001);
 
@@ -125,20 +125,20 @@ canvas.onwheel = event => {
     reRenderSceneToolbar();
 };
 
-export function setSelectedSpriteFromClick (pos: v2) {
+export function setSelectedSpriteFromClick (pos) {
     if (!ctx) throw 'no ctx';
 
     let touching = [];
     for (let sprite of Scene.activeScene.entities) {
         for (const component of sprite.components) {
             if (component.type === 'GUIElement') {
-                if ((component as GUIElement).touchingPoint(pos, ctx, sprite.transform)) {
+                if ((component).touchingPoint(pos, ctx, sprite.transform)) {
                     touching.push(sprite);
                 }
             }
 
             if (component.type === 'Collider') {
-                if ((component as Collider).overlapsPoint(sprite.transform, pos)) {
+                if ((component).overlapsPoint(sprite.transform, pos)) {
                     touching.push(sprite);
                 }
             }
@@ -171,7 +171,7 @@ window.setScene = () => {
 canvas.addEventListener('click', event => {
     if (state.window !== states.sceneView) return;
     const mousePos = getMousePos(canvas, event);
-    const clickPos = state.sceneCamera?.getComponent<Camera>('Camera')
+    const clickPos = state.sceneCamera?.getComponent('Camera')
         .screenSpaceToWorldSpace(mousePos, canvas, state.sceneCamera.transform.position);
     if (clickPos) {
         setSelectedSpriteFromClick(clickPos);
@@ -194,11 +194,11 @@ canvas.addEventListener('mouseup', event => {
     state.dragging = false;
 });
 
-function drag (event: MouseEvent) {
+function drag (event) {
     state.dragEnd = getMousePos(canvas, event);
     const diff = state.dragEnd.clone.sub(state.dragStart);
 
-    const camZoom = state.sceneCamera?.getComponent<Camera>('Camera').zoom ?? 1;
+    const camZoom = state.sceneCamera?.getComponent('Camera').zoom ?? 1;
 
     diff.scale(1/camZoom);
     // reverse to drag naturally in the right direction
@@ -219,7 +219,7 @@ canvas.addEventListener('mousemove', evt => {
     // update world and screen space values in scene view toolbar
 
     const screenSpace = getMousePos(canvas, evt);
-    const worldSpace = state.sceneCamera.getComponent<Camera>('Camera')
+    const worldSpace = state.sceneCamera.getComponent('Camera')
         .screenSpaceToWorldSpace(screenSpace, canvas, state.sceneCamera.transform.position);
 
     const worldSpaceDIV = $('#world-space-pos');
@@ -242,14 +242,14 @@ canvas?.parentNode?.addEventListener('resize', () => {
 });
 
 // for type Entity in the inspector
-window.findSpriteWithName = (name: string) => {
+window.findSpriteWithName = (name) => {
     return Entity.find(name);
 };
 
 // if no entity is found with that name, then the active scene is used instead
-window.findNodeWithName = (name: string) => {
+window.findNodeWithName = (name) => {
 
-    let node: Transform | number | undefined = Entity.find(name)?.transform;
+    let node = Entity.find(name)?.transform;
 
     node ??= Scene.active;
 

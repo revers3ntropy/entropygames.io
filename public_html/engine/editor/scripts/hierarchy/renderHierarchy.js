@@ -3,7 +3,7 @@ import {Scene, Entity, Transform} from "entropy-engine";
 import {reRender, rightClickOption, setRightClick} from "../renderer";
 import {setRightClickAddEntityMenu} from "./rightClickCreateMenu";
 
-const _entity_ = (entity: Entity, selected: boolean): string => `
+const _entity_ = (entity, selected) => `
     <div style="margin: 0; padding: 0" id="entity${entity.id}">
         <button
             class="empty-button"

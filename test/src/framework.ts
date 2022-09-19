@@ -76,7 +76,11 @@ export default class Test {
             try {
                 testRes = await test.run(api, flags);
             } catch (e) {
-                testRes = e;
+                if (e instanceof Error) {
+                    testRes = e.name + ': ' + e.stack;
+                } else {
+                    testRes = e;
+                }
             }
             res.register(testRes, test);
         }
@@ -87,6 +91,9 @@ export default class Test {
     }
 
     public static eq(o1: Record<string, any>, o2: Record<string, any>): boolean {
+        if (typeof o1 !== typeof o2) return false;
+        if (typeof o1 !== 'object') return o1 === o2;
+
         const keys1 = Object.keys(o1);
         const keys2 = Object.keys(o2);
         if (keys1.length !== keys2.length) {

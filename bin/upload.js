@@ -98,7 +98,13 @@ async function uploadFrontendMinified(dir = '') {
             const minPath = filePath + '.min';
             fs.writeFileSync(minPath, data);
             await upload(minPath, p.join(process.env.REMOTE_FRONTEND_PATH, dir, path)).then(() => {
-                setTimeout(() => fs.rmSync(minPath), 1000);
+                setTimeout(() => {
+                    try {
+                        fs.rmSync(minPath);
+                    } catch (e) {
+                        console.log(c.red(e));
+                    }
+                }, 1000);
             });
 
         } else {

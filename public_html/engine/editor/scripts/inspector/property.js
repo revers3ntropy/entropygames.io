@@ -1,9 +1,9 @@
 import {reRender} from "../renderer";
 import {state} from '../state';
 
-import {Scene, v2, v3, colour} from "entropy-engine";
+import {Scene, v2, v3} from "entropy-engine";
 
-function _colour_ (id: string, value: colour, componentName: string) {
+function _colour_ (id, value, componentName) {
 	return `
 		<input 
 			type="color" 
@@ -14,7 +14,7 @@ function _colour_ (id: string, value: colour, componentName: string) {
 	`
 }
 
-function _transform_ (id: string, value: string, componentName: string, argumentChain: string, key: string, canBeSelf=false) {
+function _transform_ (id, value, componentName, argumentChain, key, canBeSelf=false) {
 	let showValue = `
 		<select
 			id="${id}"
@@ -59,7 +59,7 @@ function _transform_ (id: string, value: string, componentName: string, argument
 	return showValue;
 }
 
-function _array_ (id: string, value: any[], type=typeof value[0]) {
+function _array_ (id, value, type=typeof value[0]) {
 
 	window[`addElement${id}`] = () => {
 		let defaultValue;
@@ -113,7 +113,7 @@ function _array_ (id: string, value: any[], type=typeof value[0]) {
 	return showValue;
 }
 
-export const _componentProperty_ = (object: any, key: string, componentName: string, chain: (string|number)[]=[], showName=key, type: string | null = null) => {
+export const _componentProperty_ = (object, key, componentName, chain=[], showName=key, type= null) => {
 
 	let showValue = '';
 	let value = object[key];
