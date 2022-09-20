@@ -1,5 +1,7 @@
 #!/bin/bash
 
+sudo npm i -g webpack-cli;
+sudo npm i -g webpack &
 (
 	cd bin || exit;
 	npm i;
@@ -18,3 +20,4 @@
 ) & wait
 
 bin/migrate dev;
+bin/migrate test;

@@ -28,8 +28,8 @@ fi
 [ "$#" -eq 1 ] || die "1 argument required, $# provided"
 
 
-end=`date +%s.%N`
+end=$(date +%s)
 
 runtime=$( echo "$end - $start" | bc -l )
 
-echo "Migrated DB '$1' destructively in: $runtime"
+echo "Migrated DB '$1' destructively in: $runtime s"

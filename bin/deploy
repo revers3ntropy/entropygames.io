@@ -30,7 +30,7 @@ node --enable-source-maps server --logTo=test.log --logLevel=4 --dbLogLevel=2 --
 
 bin/kill-server 9081
 
-end=`date +%s.%N`
+end=`date +%s`
 
 runtime=$( echo "$end - $start" | bc -l )
 

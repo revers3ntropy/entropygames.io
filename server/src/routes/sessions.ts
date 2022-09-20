@@ -81,11 +81,11 @@ route('create/sessions/from-login', async ({ query, body }) => {
             AND password = SHA2(CONCAT(${password}, salt), 256);
     `;
 
-    if (!res[0]) return 'Invalid email or password';
+    if (!res[0]) return 'Invalid username or password';
     if (res.length > 1) {
         // don't tell the user about this, it's a security issue
         log.error`Multiple users found with username ${username}`;
-        return 'Invalid email or password';
+        return 'Invalid username or password';
     }
 
     const sessionId = await generateUUId();

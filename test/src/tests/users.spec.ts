@@ -173,17 +173,17 @@ Test.test('Users | Getting info from username', async api => {
     const { userId: userId1, sessionId: sessionId1, username: username1 } = await generateUser(api, 1);
     const { userId: userId2, sessionId: sessionId2, username: username2 } = await generateUser(api);
 
-    let res = (await api(`get/users`, {
+    let res = await api(`get/users`, {
         username: username2
-    }));
+    });
     if (res?.id !== userId2) {
-        return `Expected id '${userId2}' from 'get/users/from-username', got '${res.id}'`;
+        return `Expected id '${userId2}' from 'get/users', got '${res.id}'`;
     }
     if (res?.username !== username2) {
-        return `Expected username '${username2}' from 'get/users/from-username', got '${res.username}'`;
+        return `Expected username '${username2}' from 'get/users', got '${res.username}'`;
     }
     if (res?.admin !== 0) {
-        return `Expected admin to be false from 'get/users/from-username', got '${res.admin}'`;
+        return `Expected admin to be false from 'get/users', got '${res.admin}'`;
     }
 
     // check that we can do that again but using the newly created admin code
@@ -200,7 +200,7 @@ Test.test('Users | Getting info from username', async api => {
         username: username1
     });
     if (res.id) {
-        return `1: ${JSON.stringify(res)}`;
+        return `expected no 'id' ${JSON.stringify(res)}`;
     }
     if (res.username !== username1) {
         return `2: ${JSON.stringify(res)}`;
@@ -246,19 +246,23 @@ Test.test('Users | Getting all', async api => {
 
 Test.test('Users | Creating', async api => {
     const { userId: userId1, sessionId: sessionId1 } = await generateUser(api, 1);
-    const { userId: userId2, sessionId: sessionId2 } = await generateUser(api);
+    const { userId: userId2 } = await generateUser(api);
 
     let res = await api(`create/users`, {
-        session: sessionId2,
+        session: 'some invalid session again',
         username: 'fake',
         password: 'mypassword'
     });
-    if (res.ok || res.status !== 401) {
+    if (!res.ok || res.status !== 201) {
         return `0: ${JSON.stringify(res)}`;
     }
+    await api('delete/users', {
+        session: sessionId1,
+        userId: res.userId
+    });
     res = await api(`create/users`, {
         sessionId: sessionId1,
-        username: 'fake',
+        username: 'fake 2',
         password: 'mypassword'
     });
     if (!res.ok || res.status !== 201) {
@@ -267,7 +271,7 @@ Test.test('Users | Creating', async api => {
 
     res = await api(`create/sessions/from-login`, {
         session: 'some invalid session',
-        username: 'fake',
+        username: 'fake 2',
         password: 'mypassword'
     });
     if (!res.ok || res.status !== 200 || !res.sessionId || !res.userId) {
@@ -280,7 +284,7 @@ Test.test('Users | Creating', async api => {
         session: sessionId1,
         userId: userId3
     }));
-    if (res.username !== 'fake') {
+    if (res.username !== 'fake 2') {
         return `6: ${JSON.stringify(res)}`;
     }
 
@@ -288,7 +292,7 @@ Test.test('Users | Creating', async api => {
         session: sessionId3,
         userId: userId3
     });
-    if (res.username !== 'fake') {
+    if (res.username !== 'fake 2') {
         return `7: ${JSON.stringify(res)}`;
     }
 
@@ -306,7 +310,7 @@ Test.test('Users | Updating admin status', async api => {
     let res = await api(`update/users/admin`, {
         session: sessionId2,
         userId: userId2,
-        admin: true
+        admin: 1
     });
     if (res.ok || res.status !== 401 || res.data) {
         return `0: ${JSON.stringify(res)}`;
@@ -314,7 +318,7 @@ Test.test('Users | Updating admin status', async api => {
     res = await api(`get/users`, {
         userId: userId2
     });
-    if (res.data?.[0]?.['admin'] !== 0) {
+    if (res['admin'] !== 0) {
         return `1: ${JSON.stringify(res)}`;
     }
     res = await api(`update/users/admin`, {
@@ -328,8 +332,8 @@ Test.test('Users | Updating admin status', async api => {
     res = await api(`get/users`, {
         userId: userId2
     });
-    if (res?.data?.[0]?.['admin'] !== 1) {
-        return `3: ${ JSON.stringify(res) }`;
+    if (res['admin'] !== 1) {
+        return `3: ${JSON.stringify(res)}`;
     }
 
     await api(`delete/users`, { userId: userId1 });

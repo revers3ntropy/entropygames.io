@@ -1,4 +1,3 @@
-import emailValidator from 'email-validator';
 import mysql from 'mysql2';
 
 import route from '../';
@@ -63,9 +62,10 @@ route('get/users', async ({ query, body }) => {
         }
 
         res = res[0];
+
         if (!await isAdmin(body, query)) {
             const user = await userFromSession(query, body.session);
-            if (!user || res['userId'] === user['id']) {
+            if (!user || res['userId'] !== user['id']) {
                 delete res['id'];
                 delete res['email'];
                 delete res['email_verified'];
@@ -130,7 +130,7 @@ route('create/users', async ({ query, body }) => {
         SELECT id FROM users WHERE username = ${username}
     `;
     if (currentUser.length) {
-        return `User with that email already exists`;
+        return `User with that username already exists`;
     }
 
     if (typeof password !== 'string') return `Invalid password`;
@@ -261,22 +261,24 @@ route('delete/users', async ({ query, body }) => {
 
     const { userId, session } = body;
 
-    if (typeof session !== 'string') {
-        return 'Session Id is not a string';
+    if (typeof session !== 'string' || !session) {
+        return 'Invalid Session Id';
     }
-    if ((await idFromSession(query, session)) === userId)
-        return {
-            status: 403,
-            error: 'You cannot delete your own account'
-        };
+    if (typeof userId !== 'string' || !userId) {
+        return 'Invalid User Id';
+    }
+
+    if ((await idFromSession(query, session)) === userId) return {
+        status: 403,
+        error: 'You cannot delete your own account'
+    };
 
     const queryRes = await query<mysql.OkPacket>`
         DELETE FROM users
         WHERE id = ${userId}
     `;
-    if (!queryRes.affectedRows)
-        return {
-            status: 406,
-            error: 'User not found'
-        };
+    if (!queryRes.affectedRows) return {
+        status: 406,
+        error: 'User not found'
+    };
 });
