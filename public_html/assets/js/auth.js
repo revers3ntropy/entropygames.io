@@ -2,6 +2,7 @@
 import * as core from './main.js';
 import { api } from './backendAPI.js';
 import { LS_SESSION, showErrorFromCode } from './main.js';
+import { ConfirmPopup } from '../components/confirm-popup.js';
 
 /**
  * Caches the user info
@@ -99,10 +100,16 @@ export async function signedIn() {
  * @returns {Promise<void>}
  */
 export async function logout() {
-    if (!confirm(`Are you sure you want to sign out?`)) {
-        return;
-    }
-    await logoutAction();
+    ConfirmPopup({
+        title: 'Sign Out',
+        message: 'Are you sure you want to sign out?',
+        $el: document.body,
+        then: (res) => {
+            if (res) {
+                logoutAction();
+            }
+        }
+    });
 }
 
 /**
@@ -112,7 +119,7 @@ export async function logout() {
  */
 export async function logoutAction() {
     await localStorage.removeItem(core.LS_SESSION);
-    reservoir.set({
+    R.set({
         'user': null,
         'signedIn': false
     },true);
@@ -166,13 +173,4 @@ export async function signInAs(id, username) {
 
     await setSession(sessionId);
     await core.navigate(`/user/?@=${username}`);
-}
-
-/**
- * Generates a password.
- * @returns {string}
- */
-export function genPassword() {
-    return 'changeme';
-    //return genRandomString(15);
 }

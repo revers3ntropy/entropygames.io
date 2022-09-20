@@ -31,10 +31,15 @@
     >
         <i pump.class="ui icon big ${theme === 'light' ? 'sun' : 'moon'}"></i>
     </button>
+    <a hidden="userInfoIsLoaded" class='ui loading button'></a>
+    <a hidden='!signedIn' pump.href='${rootPath}/@/?u=${user.username}'>
+        <i class='user icon big'></i>
+    </a>
+    <a hidden='signedIn' pump.href='${rootPath}/auth/sign-in'>
+        <i class='sign-in icon big'></i>
+    </a>
 </div>
-
 <style>
-
     nav {
         display: grid;
         justify-content: space-between;

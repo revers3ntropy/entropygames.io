@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Entropy Games</title>
+    <link rel="stylesheet" href="../assets/css/main.css">
+    <script defer type="module">
+        import { init, getURLParam, userInfo, api, signedIn, navigate, logout } from '../assets/js/main.js';
+        await init();
+
+        if (!await signedIn()) {
+            await navigate('../auth/sign-in?cb=/@');
+        }
+
+        const theUser = await api('get/users', {
+            username: getURLParam('u') || (await userInfo()).username
+        });
+
+        R.set({
+            theUser,
+            logout
+        });
+    </script>
+</head>
+<body>
+<nav></nav>
+<main>
+    <h1 pump='theUser.username' pump-end>@</h1>
+
+    <button bind.click='logout()' class='ui labeled icon button'>
+        <i class='logout icon'></i>
+        Log Out
+    </button>
+</main>
+<footer></footer>
+</body>
+</html>

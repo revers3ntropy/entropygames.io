@@ -162,6 +162,7 @@ export async function init({
         rootPath: ROOT_PATH,
         user: state.userInfoJSON,
         signedIn: state.isSignedIn,
+        userInfoIsLoaded: true,
         path: location.pathname,
         url: location.href,
         theme: localStorage.getItem(LS_THEME),

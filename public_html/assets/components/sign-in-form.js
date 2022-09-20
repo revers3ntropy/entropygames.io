@@ -50,7 +50,11 @@ async function submitAction (create, username, password, cb) {
 
 	await setSession(logInRes.sessionId);
 
-	await navigate(cb || ROOT_PATH);
+	if (typeof cb !== 'string' || !cb) {
+		cb = ROOT_PATH;
+	}
+	
+	await navigate(cb);
 }
 
 export const SignInForm = reservoir.Component('sign-in-form', ({ id, cb }) => {
