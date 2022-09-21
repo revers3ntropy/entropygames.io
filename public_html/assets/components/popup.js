@@ -9,20 +9,25 @@ export const Popup = reservoir.Component('pop-up', ({
 	content,
 	id,
 	shown = true,
+	$el
 }) => {
 	if (!shown) return;
+
 
 	const $p = document.createElement('div');
 	$p.classList.add('popup');
 	$p.id = `__Popup${id}`;
 
 	$p.innerHTML = `
-		<div class="popup-content" pour.popupId="${id}">
+		<div class="popup-content" pour.popupid="${id}">
 			${content}
 		</div>
 	`;
 
 	document.body.appendChild($p);
+	R.reload($p);
+
+	console.log(R.errors);
 
 	function hide() {
 		$p.remove();
@@ -37,6 +42,7 @@ export const Popup = reservoir.Component('pop-up', ({
 		// check that we clicked on the background not the popup content
 		if (evt.target.classList.contains('popup')) {
 			hide();
+			evt.preventDefault();
 		}
 	});
 
@@ -51,4 +57,7 @@ export const Popup = reservoir.Component('pop-up', ({
 	addEventListener('keydown', keyDownListener);
 
 	popupStack.push(id);
+
+	$el.style.display = 'none';
+	return '';
 })

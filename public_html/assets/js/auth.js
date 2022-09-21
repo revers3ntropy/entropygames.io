@@ -103,7 +103,6 @@ export async function logout() {
     ConfirmPopup({
         title: 'Sign Out',
         message: 'Are you sure you want to sign out?',
-        $el: document.body.appendChild(document.createElement('div')),
         then: (res) => {
             if (res) {
                 logoutAction();

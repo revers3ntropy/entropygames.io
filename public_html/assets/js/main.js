@@ -94,8 +94,8 @@ export * from './dom.js';
 
     import('../../assets/lib/jquery/index.js')
         .then(() => {
-            import('../../assets/lib/semantic/semantic.min.js')
-                .then();
+            //import('../../assets/lib/semantic/semantic.min.js')
+              //  .then();
         });
 
 
