@@ -1,4 +1,5 @@
 import { escapeHTML } from '../js/main.js';
+import { hidePopup } from "./popup.js";
 
 export const ConfirmPopup = reservoir.Component('confirm-popup', ({
     message,
@@ -13,31 +14,31 @@ export const ConfirmPopup = reservoir.Component('confirm-popup', ({
     }
 
     R.set({
-        [`ConfirmPopup${id}_then`]: (value, self) => {
-            console.log(value, self);
-            self.parentElement.remove();
+        [`ConfirmPopup${id}_then`]: (value, id) => {
+            console.log(value, id);
+            hidePopup(id);
             then(value);
         }
     });
 
     return `
-        <div style='margin: 0 auto'>
+        <pop-up>
             <h2>${title}</h2>
             <p>${message}</p>
-            <button 
+            <button
                 class='ui labeled icon button'
-                bind.click='ConfirmPopup${id}_then(false, $el)'
+                bind.click='console.log(popupId), ConfirmPopup${id}_then(false, popupId)'
             >
                 <i class='ui cross icon'></i>
                 Cancel
             </button>
-            <button 
-                class='ui labeled icon button primary' 
-                bind.click='ConfirmPopup${id}_then(true, $el)'
+            <button
+                class='ui labeled icon button primary'
+                bind.click='ConfirmPopup${id}_then(true, popupId)'
             >
                 <i class='ui check icon'></i>
                 Ok
             </button>
-        </div>
+        </pop-up>
     `;
 })

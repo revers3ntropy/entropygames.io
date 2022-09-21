@@ -115,7 +115,7 @@ export async function domIsLoaded() {
             <link rel="stylesheet" href="${ROOT_PATH}/assets/lib/semantic/semantic.min.css" media="print" onload="this.media='all'">
     ` + document.head.innerHTML;
 
-    R.hook('preHydrate', $el => {
+    R.hook('postHydrate', $el => {
         if (theme() === 'dark') {
             $el?.classList?.add('inverted');
         } else {

@@ -47,8 +47,7 @@ export const state = {
     documentLoaded: false,
     inlineComponentIndex: 0,
     spinnerQueue: [],
-    spinnerFrameId: 0,
-    popupStack: [],
+    spinnerFrameId: 0
 };
 
 // polluting the global namespace
