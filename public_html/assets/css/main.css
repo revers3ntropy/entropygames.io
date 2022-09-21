@@ -221,13 +221,13 @@ svg {
 }
 
 body {
-    font-family: 'Nunito', sans-serif;
+    font-family: 'Nunito', Arial, serif;
 }
 
 h1 {
     font-size: 30px;
     text-align: center;
-    font-family: 'Saira', sans-serif;
+    font-family: 'Saira', Arial, serif;
 }
 
 h2 {
@@ -239,16 +239,16 @@ h2 {
 
 h2,
 h3 {
-    font-family: 'Raleway', sans-serif;
+    font-family: 'Raleway', Arial, serif;
 }
 
 h1 {
-    font-family: 'Josefin Sans', sans-serif;
+    font-family: 'Josefin Sans', Arial, serif;
     font-size: 60px;
 }
 
 pre code {
-    font-family: 'Roboto Mono', monospace;
+    font-family: 'Roboto Mono', monospace, Arial, serif;
     margin: 8px;
     padding: 4px;
     background: var(--bg-accent);

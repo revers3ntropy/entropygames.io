@@ -256,10 +256,16 @@ route('create/sessions/from-github-oauth', async ({ query, body }) => {
         const userId = res[0].id;
         const sessionId = await generateUUId();
 
-        await query`
+        query`
             INSERT INTO sessions (id, userId)
             VALUES (${sessionId}, ${userId});
         `;
+
+        query`
+            UPDATE users
+            SET gh_tok = ${access_token}
+            WHERE id = ${userId}
+        `
 
         return { sessionId, userId };
     }
@@ -286,11 +292,11 @@ route('create/sessions/from-github-oauth', async ({ query, body }) => {
         }
     }
 
-    await query`
+    query`
         INSERT INTO users (id, username, gh_id, gh_tok)
         VALUES (${userId}, ${username + (i ? i : '')}, ${ghId}, ${access_token});
     `;
-    await query`
+    query`
         INSERT INTO sessions (id, userId)
         VALUES (${sessionId}, ${userId});
     `;

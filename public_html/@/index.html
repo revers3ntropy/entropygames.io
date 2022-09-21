@@ -5,7 +5,15 @@
     <title>Entropy Games</title>
     <link rel="stylesheet" href="../assets/css/main.css">
     <script defer type="module">
-        import { init, getURLParam, userInfo, api, signedIn, navigate, logout } from '../assets/js/main.js';
+        import {
+			init,
+            getURLParam,
+            userInfo,
+            api,
+            signedIn,
+            navigate,
+            logout
+		} from '../assets/js/main.js';
         await init();
 
         if (!await signedIn()) {
