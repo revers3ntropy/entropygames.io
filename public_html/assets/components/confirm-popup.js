@@ -15,7 +15,6 @@ export const ConfirmPopup = reservoir.Component('confirm-popup', ({
 
     R.set({
         [`ConfirmPopup${id}_then`]: (value, id) => {
-            console.log(value, id);
             hidePopup(id);
             then(value);
         }
@@ -27,7 +26,7 @@ export const ConfirmPopup = reservoir.Component('confirm-popup', ({
             <p>${message}</p>
             <button
                 class='ui labeled icon button'
-                bind.click='console.log(10), ConfirmPopup${id}_then(false, popupid)'
+                bind.click='ConfirmPopup${id}_then(false, popupid)'
             >
                 <i class='ui cross icon'></i>
                 Cancel

@@ -77,12 +77,10 @@ route('get/users', async ({ query, body }) => {
     } else {
         if (!(await isAdmin(body, query))) {
             const user = await userFromSession(query, body.session);
-            if (!user) return AUTH_ERR;
-            if (!user['id']) return AUTH_ERR;
 
             if (Array.isArray(res)) {
                 for (let i = 0; i < res.length; i++) {
-                    if (res[i]?.['userId'] === user['id']) {
+                    if (res[i]?.['userId'] === user?.['id']) {
                         continue;
                     }
 

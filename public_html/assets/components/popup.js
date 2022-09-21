@@ -27,8 +27,6 @@ export const Popup = reservoir.Component('pop-up', ({
 	document.body.appendChild($p);
 	R.reload($p);
 
-	console.log(R.errors);
-
 	function hide() {
 		$p.remove();
 		popupStack.splice(popupStack.indexOf(id), 1);
