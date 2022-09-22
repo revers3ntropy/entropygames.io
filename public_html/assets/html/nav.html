@@ -32,9 +32,17 @@
         <i pump.class="ui icon big ${theme === 'light' ? 'sun' : 'moon'}"></i>
     </button>
     <a hidden="userInfoIsLoaded" class='ui loading button'></a>
-    <a hidden='!signedIn' pump.href='${rootPath}/@/?u=${user.username}'>
-        <i class='user icon big'></i>
-    </a>
+    <drop-down icon="'user'">
+        <div class="item">
+            Signed in as<br>
+            <b pump="user.username"></b>
+        </div>
+        <div class="item">
+            <a pump.href='${rootPath}/@/?u=${user.username}'>
+                Your Profile
+            </a>
+        </div>
+    </drop-down>
     <a hidden='signedIn' pump.href='${rootPath}/auth/sign-in'>
         <i class='sign-in icon big'></i>
     </a>

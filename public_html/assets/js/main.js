@@ -94,10 +94,9 @@ export * from './dom.js';
 
     import('../../assets/lib/jquery/index.js')
         .then(() => {
-            //import('../../assets/lib/semantic/semantic.min.js')
-              //  .then();
+            import('../../assets/lib/semantic/semantic.min.js')
+                .then();
         });
-
 
     // main function - don't put top-level code anywhere else
     if (document.readyState === 'complete') {
