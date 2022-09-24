@@ -4,9 +4,14 @@ export const Dropdown = reservoir.Component('drop-down', ({
 	content,
 }) => {
 
-	setTimeout(() => {
-		$('.ui.dropdown').dropdown();
-	}, 1000);
+	Promise.all([
+		import('../../assets/lib/semantic/components/dropdown.min.js'),
+		import('../../assets/lib/semantic/components/transition.min.js')
+	]).then(() => {
+		setTimeout(() => {
+			$('.ui.dropdown').dropdown();
+		}, 10);
+	});
 
 	return `
 		<div class="ui inline dropdown">

@@ -1,6 +1,7 @@
 'use strict';
 // Utility script imported by all pages
 import '../../cdn/node_modules/hydrate-web/index.js';
+import '../../assets/lib/jquery/index.js';
 
 window.R = window.reservoir;
 
@@ -13,6 +14,11 @@ export const
     SPINNER_STOP_DELAY = 300,
     MAX_NOTIFICATIONS = 4,
     NOTIFICATION_SHOW_TIME = 5000,
+    ENVIRONMENTS = {
+        'localhost': 'dev',
+        'entropygames.io': 'prod',
+        'staging.entropygames.io': 'staging'
+    },
     API_ROUTES = {
         'test': 'http://localhost:9081',
         'dev': 'http://localhost:9080/',
@@ -28,9 +34,9 @@ export const
 
 // should be const but is set once at the start of the script
 export let
-    ROOT_PATH = '',
-    ENV = 'prod',
-    API_ROOT = API_ROUTES[ENV];
+    ENV = ENVIRONMENTS[new URL(window.location.href).hostname] || 'test',
+    API_ROOT = API_ROUTES[ENV],
+    ROOT_PATH = SITE_ROOTS[ENV];
 
 export const state = {
     $nav: null,
@@ -88,15 +94,12 @@ export * from './backendAPI.js';
 export * from './dom.js';
 
 (async () => {
-    ENV = detectEnv();
-    API_ROOT = API_ROUTES[ENV];
-    ROOT_PATH = SITE_ROOTS[ENV];
 
-    import('../../assets/lib/jquery/index.js')
-        .then(() => {
-            import('../../assets/lib/semantic/semantic.min.js')
-                .then();
-        });
+    // import('../../assets/lib/jquery/index.js')
+    //     .then(() => {
+    //         import('../../assets/lib/semantic/semantic.min.js')
+    //             .then();
+    //     });
 
     // main function - don't put top-level code anywhere else
     if (document.readyState === 'complete') {
@@ -121,7 +124,7 @@ export async function init({
 }={}) {
     const start = performance.now();
 
-    ENV = detectEnv();
+    ENV = ENVIRONMENTS[new URL(window.location.href).hostname] || 'test';
     API_ROOT = API_ROUTES[ENV];
     ROOT_PATH = rootPath || SITE_ROOTS[ENV];
 
@@ -184,21 +187,6 @@ export async function init({
 
     const time = performance.now() - start;
     console.log(`Initialised page in ${time.toPrecision(3)}ms`);
-}
-
-function detectEnv () {
-    const url = new URL(window.location.href);
-
-    if (url.hostname === 'localhost') {
-        return 'dev';
-    }
-    if (url.hostname === 'entropygames.io') {
-        return 'prod';
-    }
-    if (url.hostname === 'staging.entropygames.io') {
-        return 'staging';
-    }
-    return 'test';
 }
 
 /**

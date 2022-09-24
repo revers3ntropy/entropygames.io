@@ -32,8 +32,8 @@
         <i pump.class="ui icon big ${theme === 'light' ? 'sun' : 'moon'}"></i>
     </button>
     <a hidden="userInfoIsLoaded" class='ui loading button'></a>
-    <drop-down icon="'user'">
-        <div class="item">
+    <drop-down icon="'user'" hidden="!signedIn">
+        <div class="header">
             Signed in as<br>
             <b pump="user.username"></b>
         </div>
