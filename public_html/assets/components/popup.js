@@ -13,13 +13,12 @@ export const Popup = reservoir.Component('pop-up', ({
 }) => {
 	if (!shown) return;
 
-
 	const $p = document.createElement('div');
 	$p.classList.add('popup');
 	$p.id = `__Popup${id}`;
 
 	$p.innerHTML = `
-		<div class="popup-content" pour.popupid="${id}">
+		<div class="popup-content" data-popupid="${id}">
 			${content}
 		</div>
 	`;

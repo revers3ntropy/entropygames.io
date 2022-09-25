@@ -1,21 +1,24 @@
 <div class="nav-left">
-    <a pump.href="${rootPath}">
-        <svg-loader href="`${rootPath}/cdn/img/entropy-games.svg`"></svg-loader>
+    <a $href="rootPath">
+        <svg-loader $href="`${rootPath}/cdn/img/entropy-games.svg`"></svg-loader>
     </a>
 </div>
 
 <div class="nav-center">
-    <a pump.href="${rootPath}/entropy-engine">ENTROPY ENGINE</a>
+    <a $href="`${rootPath}/entropy-engine`">ENTROPY ENGINE</a>
     <div class="nav-item">
-        <a pump.href="${rootPath}/entropy-script">
+        <a $href="`${rootPath}/entropy-script`">
             ENTROPY SCRIPT
         </a>
         <div class="nav-item-dropdown">
-            <a pump.href="${rootPath}/entropy-script/docs" class="ui labeled icon button">
+            <a $href="`${rootPath}/entropy-script/docs`"
+               class="ui labeled icon button" target="_blank">
                 <i class="file alternate outline icon"></i>
                 Documentation
             </a>
-            <a pump.href="${rootPath}/entropy-script/run" class="ui labeled icon button">
+            <a $href="`${rootPath}/entropy-script/run`"
+               class="ui labeled icon button"
+            >
                 <i class="terminal icon"></i>
                 Playground
             </a>
@@ -24,26 +27,30 @@
 </div>
 
 <div class="nav-right">
-    <button
-        aria-label="Switch theme"
-        bind.click="setTheme(theme === 'light' ? 'dark' : 'light')"
-        style="background: none; border: none; outline: none; cursor: pointer;"
-    >
-        <i pump.class="ui icon big ${theme === 'light' ? 'sun' : 'moon'}"></i>
+    <button aria-label="Switch theme"
+            @click="setTheme(theme === 'light' ? 'dark' : 'light')"
+            style="background: none; border: none; outline: none; cursor: pointer;">
+        <i $class="`ui icon big ${theme === 'light' ? 'sun' : 'moon'}`"></i>
     </button>
     <a hidden="userInfoIsLoaded" class='ui loading button'></a>
-    <drop-down icon="'user'" hidden="!signedIn">
+    <drop-down icon="user" hidden="!signedIn">
         <div class="header">
             Signed in as<br>
-            <b pump="user.username"></b>
+            <b $="user.username"></b>
         </div>
+        <hr>
         <div class="item">
-            <a pump.href='${rootPath}/@/?u=${user.username}'>
+            <a $href='`${rootPath}/@/?u=${user.username}`'>
                 Your Profile
             </a>
         </div>
+        <div class="item">
+            <a is="button" @click="logout(false)">
+                Sign Out
+            </a>
+        </div>
     </drop-down>
-    <a hidden='signedIn' pump.href='${rootPath}/auth/sign-in'>
+    <a hidden='signedIn' $href='`${rootPath}/auth/sign-in`'>
         <i class='sign-in icon big'></i>
     </a>
 </div>

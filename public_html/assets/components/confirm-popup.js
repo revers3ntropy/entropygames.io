@@ -26,14 +26,14 @@ export const ConfirmPopup = reservoir.Component('confirm-popup', ({
             <p>${message}</p>
             <button
                 class='ui labeled icon button'
-                bind.click='ConfirmPopup${id}_then(false, popupid)'
+                @click='ConfirmPopup${id}_then(false, popupid)'
             >
                 <i class='ui cross icon'></i>
                 Cancel
             </button>
             <button
                 class='ui labeled icon button primary'
-                bind.click='ConfirmPopup${id}_then(true, popupid)'
+                @click='ConfirmPopup${id}_then(true, popupid)'
             >
                 <i class='ui check icon'></i>
                 Ok

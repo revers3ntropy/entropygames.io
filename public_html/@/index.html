@@ -24,16 +24,13 @@
             username: getURLParam('u') || (await userInfo()).username
         });
 
-        R.set({
-            theUser,
-            logout
-        });
+        R.set({ theUser });
     </script>
 </head>
 <body>
 <nav></nav>
 <main>
-    <h1 pump='theUser.username' pump-end>@</h1>
+    <h1>@<span $='theUser.username' style="font: inherit"></span></h1>
 </main>
 <footer></footer>
 </body>

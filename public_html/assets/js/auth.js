@@ -2,7 +2,7 @@
 import * as core from './main.js';
 import { api } from './backendAPI.js';
 import { LS_SESSION, showErrorFromCode } from './main.js';
-import { ConfirmPopup } from '../components/confirm-popup.js';
+import { ConfirmPopup } from '../components/index.js';
 
 /**
  * Caches the user info
@@ -10,6 +10,11 @@ import { ConfirmPopup } from '../components/confirm-popup.js';
  * @returns {Promise<void>}
  */
 export async function handleUserInfo(info) {
+    if (!info || info.status === 401) {
+        localStorage.removeItem(LS_SESSION);
+        info = null;
+    }
+
     state.isSignedIn = info?.ok;
 
     if (!state.isSignedIn) {
@@ -99,14 +104,22 @@ export async function signedIn() {
  * redirects to the login page
  * @returns {Promise<void>}
  */
-export async function logout() {
-    ConfirmPopup({
-        title: 'Sign Out',
-        message: 'Are you sure you want to sign out?',
-        then: (res) => {
-            if (res) {
-                logoutAction();
-            }
+export async function logout(ask = false) {
+    return new Promise(async resolve => {
+        if (ask) {
+            ConfirmPopup({
+                title: 'Sign Out',
+                message: 'Are you sure you want to sign out?',
+                then: async (res) => {
+                    if (res) {
+                        await logoutAction();
+                    }
+                    resolve();
+                }
+            });
+        } else {
+            await logoutAction();
+            resolve();
         }
     });
 }

@@ -108,20 +108,21 @@ export async function loadNav($nav) {
     R.reload($nav);
 }
 
+export function importCSS (...urls) {
+    for (let url of urls) {
+        if (url[0] === '/') {
+            url = ROOT_PATH + url;
+        }
+        document.head.innerHTML = `
+                <link rel="stylesheet" href="${url}" media="print" onload="this.media='all'">
+        ` + document.head.innerHTML;
+    }
+}
+
 export async function domIsLoaded() {
 
     // before rest so less specific than my styles
-    document.head.innerHTML = `
-            <link rel="stylesheet" href="${ROOT_PATH}/assets/lib/semantic/semantic.min.css" media="print" onload="this.media='all'">
-    ` + document.head.innerHTML;
-
-    R.hook('postHydrate', $el => {
-        if (theme() === 'dark') {
-            $el?.classList?.add('inverted');
-        } else {
-            $el?.classList?.remove('inverted');
-        }
-    });
+    importCSS('/assets/lib/semantic/semantic.min.css');
 
     updateTheme();
 
@@ -147,16 +148,7 @@ export function theme () {
  * Sets the data-theme attribute of the document body from the value stored in localStorage or the theme preference
  */
 export function updateTheme() {
-
     document.body.setAttribute('data-theme', theme());
-
-    document.querySelectorAll('*').forEach(el => {
-        if (theme() === 'dark') {
-            el.classList.add('inverted');
-        } else {
-            el.classList.remove('inverted');
-        }
-    });
 }
 
 /**

@@ -4,6 +4,8 @@
     font-size: 18px;
     position: relative;
     white-space: nowrap;
+    text-decoration: none;
+    color: var(--text-accent);
 }
 
 .hover-underline::before,

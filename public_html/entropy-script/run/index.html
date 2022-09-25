@@ -6,27 +6,32 @@
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
 
-    <link rel="stylesheet" href="../../assets/css/main.css">
-    <link rel="stylesheet" href="../../assets/lib/codemirror/codemirror.css">
-
+    <link rel="stylesheet" href="../../assets/css/main.css" blocking=render>
     <script defer type="module">
-        import { init } from '../../assets/js/main.js';
+        import { init, importCSS } from '../../assets/js/main.js';
 		import '../../cdn/node_modules/entropy-script/build/latest.js';
-		import '../../assets/lib/codemirror/codemirror.js'
-		await init({ rootPath: '../..' });
+		import '../../assets/lib/codemirror/codemirror.js';
+        importCSS('/assets/lib/codemirror/codemirror.css', '/assets/css/main.css');
+        await init();
 
-        const { run, init: initES, str } = es;
-        await initES({
+        const { outputFunc, execute, perfTest } = await import('./index.js');
+
+        await es.init({
             print: outputFunc,
             input: () => outputFunc('The Playground does not support the input function (yet)'),
             node: false
         });
 
         R.setDefaults({
-	        esPlayGroundCode: 'print("Hello World!");',
+	        esPlayGroundCode: "print('Hello World!');",
 	        esPlaygroundIterations: 10,
             esPlaygroundCompile: false
         }, true);
+        R.set({
+	        esPlaygroundLogs: [],
+	        execute,
+	        perfTest
+        });
 
         const editor = CodeMirror.fromTextArea(document.querySelector('textarea'), {
 	        lineNumbers: true,
@@ -37,120 +42,53 @@
 		editor.on('change', e => {
 			R.set('esPlayGroundCode', e.doc.getValue(), true);
 		});
-
-		R.set({
-            esPlaygroundLogs: [],
-            execute,
-            perfTest
-        });
-
-        function outputFunc (m) {
-	        R.set('esPlaygroundLogs', [m, ...R.get('esPlaygroundLogs')]);
-        }
-
-        async function execute () {
-	        R.set({ esPlaygroundLogs: [] });
-
-	        if (!!R.get('esPlaygroundCompile')) {
-		        outputFunc('Open the dev tools console to see output');
-	        }
-
-			const env = new es.Context();
-			env.parent = es.global;
-
-	        const res = run(R.get('esPlayGroundCode'), {
-		        measurePerformance: true,
-                env,
-                compileToJS: !!R.get('esPlaygroundCompile')
-	        })
-	        if (res.error) {
-		        outputFunc(res.error.str);
-	        }
-        }
-
-		function perfTest () {
-			R.set({ esPlaygroundLogs: [] });
-
-			if (!!R.get('esPlaygroundCompile')) {
-				outputFunc('Open the dev tools console to see output');
-			}
-
-			const nIterations = parseInt(R.get('esPlaygroundIterations'));
-			if (isNaN(nIterations)) {
-                outputFunc('Invalid number of iterations');
-                return;
-            }
-
-			let totalTime = 0;
-
-			const start = performance.now();
-
-			for (let i = 0; i < nIterations; i++) {
-				const iterStart = performance.now();
-
-				const env = new es.Context();
-				env.parent = es.global;
-
-				let res = run(R.get('esPlayGroundCode'), {
-					env,
-                    measurePerformance: true,
-					compileToJS: !!R.get('esPlaygroundCompile')
-                });
-				if (res.error) outputFunc(res.error.str);
-
-				totalTime += performance.now() - iterStart;
-			}
-			const end = performance.now();
-			const average = Number((totalTime / nIterations).toPrecision(3));
-			const finalOut = `${nIterations} iterations took an average of ${average}ms (total: ${(end-start).toPrecision(3)}ms)`;
-			outputFunc(finalOut);
-		}
     </script>
 </head>
 <body>
 <nav></nav>
 <main>
-    <label>
-        <textarea></textarea>
-    </label>
-    <section class="buttons">
-        <button bind.click="execute()" class="ui button primary">
+    <section style="text-align: center">
+        <button @click="execute()" class="ui labeled icon button primary">
             <i class="ui play circle outline icon large"></i>
             Execute
         </button>
-        <button bind.click="perfTest()" class="ui button" style="border-radius: 5px 0 0 5px; margin-right: 0">
+        <button
+            @click="perfTest()"
+            class="ui button icon labeled"
+            style="border-radius: 5px 0 0 5px; margin-right: 0"
+        >
             <i class="ui stopwatch icon large"></i>
             Performance Test
         </button>
         <label>
-            <input
-                type="number"
-                min="1"
-                bind="esPlaygroundIterations"
-                bind-persist
-                style="
-                    width: 100px;
-                    border: none;
-                    border-radius: 0 5px 5px 0;
-                    height: 45px;
-                    margin: 1px 0 0 0;
-                    padding: 0 0 1px 0;
-                    text-align: center;
-                    background: var(--bg-accent);
-                "
-            >
+            <input type="number"
+                   min="1"
+                   @="esPlaygroundIterations"
+                   persist
+                   style="
+                       width: 100px;
+                       border: none;
+                       border-radius: 0 5px 5px 0;
+                       height: 45px;
+                       margin: 1px 0 0 0;
+                       padding: 0 0 1px 0;
+                       text-align: center;
+                       background: var(--bg-accent);
+                   ">
         </label>
-        <button class="ui button" bind.click="this.set('esPlaygroundCompile', !esPlaygroundCompile, true)">
-            <i pump.class="ui ${esPlaygroundCompile ? 'check square outline' : 'square outline'} icon large"></i>
+        <button class="ui button icon labeled"
+                @click="this.set('esPlaygroundCompile', !esPlaygroundCompile, true)">
+            <i $class="`ui ${esPlaygroundCompile ? 'check square outline' : 'square outline'} icon large`"></i>
             Compile to JS first
         </button>
     </section>
-    <section
-        class="output"
-        foreach="log in esPlaygroundLogs"
-        each.class="log"
-        each.pump="log"
-    >
+    <label>
+        <textarea></textarea>
+    </label>
+    <section class="output"
+             foreach="log in esPlaygroundLogs"
+             each.class="log">
+        <div $="log"></div>
     </section>
 </main>
 <footer></footer>
@@ -163,24 +101,12 @@
     }
 
     .output {
-        text-align: left;
-        white-space: pre-line;
         width: calc(100% - 20px);
-        padding-top: 0;
-        margin-top: 0;
+        padding-top: 4px;
+        margin-top: 10px;
         border: none;
         background-color: var(--light-bg);
         font-size: 16px;
-    }
-
-    .input-container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-
-    .buttons {
-        text-align: center;
     }
 
     .log {
@@ -191,5 +117,6 @@
         font-size: 14px;
         word-break-inside: break-word;
         overflow-wrap: break-word;
+        font-family: "Source Code Pro", Consolas, "Ubuntu Mono", Menlo, "DejaVu Sans Mono", monospace, monospace;
     }
 </style>

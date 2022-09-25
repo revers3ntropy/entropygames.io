@@ -1,6 +1,6 @@
 'use strict';
 // Utility script imported by all pages
-import '../../cdn/node_modules/hydrate-web/index.js';
+import '../../cdn/node_modules/entropy-hydrate/index.js';
 import '../../assets/lib/jquery/index.js';
 
 window.R = window.reservoir;
@@ -17,6 +17,9 @@ export const
     ENVIRONMENTS = {
         'localhost': 'dev',
         'entropygames.io': 'prod',
+        'engine.entropygames.io': 'prod',
+        'cdn.entropygames.io': 'prod',
+        'api.entropygames.io': 'prod',
         'staging.entropygames.io': 'staging'
     },
     API_ROUTES = {
@@ -58,7 +61,6 @@ export const state = {
 
 // polluting the global namespace
 window.logout = logout;
-window.signInAs = signInAs;
 window.state = state;
 
 // for making relative dates
@@ -94,13 +96,6 @@ export * from './backendAPI.js';
 export * from './dom.js';
 
 (async () => {
-
-    // import('../../assets/lib/jquery/index.js')
-    //     .then(() => {
-    //         import('../../assets/lib/semantic/semantic.min.js')
-    //             .then();
-    //     });
-
     // main function - don't put top-level code anywhere else
     if (document.readyState === 'complete') {
         await domIsLoaded();

@@ -83,7 +83,7 @@ export const SignInForm = reservoir.Component('sign-in-form', ({ id, cb }) => {
 			<div class="field">
 				<label>Username</label>
 				<input 
-					bind="SignInForm${id}_username"
+					@="SignInForm${id}_username"
 					type="text"
 					autocomplete="username"
 					placeholder="username"
@@ -93,7 +93,7 @@ export const SignInForm = reservoir.Component('sign-in-form', ({ id, cb }) => {
 			<div class="field">
 				<label>Password</label>
 				<input 
-					bind="SignInForm${id}_password"
+					@="SignInForm${id}_password"
 					type="password"
 					autocomplete="current-password"
 					placeholder="password"
@@ -104,7 +104,7 @@ export const SignInForm = reservoir.Component('sign-in-form', ({ id, cb }) => {
 		        <button 
 					class="ui button icon labeled"
 					type="submit"
-					bind.click="SignInForm${id}_submit(true)"
+					@click="SignInForm${id}_submit(true)"
 				>
 					<i class="plus icon"></i>
 					Create Account
@@ -112,7 +112,7 @@ export const SignInForm = reservoir.Component('sign-in-form', ({ id, cb }) => {
 				<button 
 					class="ui button icon labeled primary"
 					type="submit"
-					bind.click="SignInForm${id}_submit()"
+					@click="SignInForm${id}_submit()"
 				>
 					<i class="right arrow icon"></i>
 					Sign In

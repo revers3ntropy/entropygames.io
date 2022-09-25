@@ -1,0 +1,74 @@
+/* ------------------ Chartist Overrides -------------------- */
+.ct-label {
+    color: var(--text) !important;
+    fill: var(--text) !important;
+}
+
+/* ------------------ Semantic UI -------------------- */
+.ui *, .ui {
+    color: var(--text) !important;
+}
+
+i.ui {
+    width: 2em !important;
+}
+
+[data-theme='dark'] .ui.button,
+[data-theme='dark'] .ui.button:hover,
+[data-theme='dark'] .ui.button.primary,
+[data-theme='dark'] .ui.button.primary:hover{
+    box-shadow: none !important;
+    background: var(--bg-accent) !important;
+}
+[data-theme='dark'] .ui.button.primary {
+    border: 2px solid var(--accent) !important;
+    font-size: 17px !important;
+}
+[data-theme='dark'] .ui.button.primary:hover {
+    color: var(--accent) !important;
+    background: var(--bg-accent) !important;
+}
+[data-theme='dark'] .ui.button:hover {
+    background: var(--accent) !important;
+    color: var(--text) !important;
+}
+
+.ui.button.primary {
+    background: var(--accent) !important;
+    color: var(--text) !important;
+    border: 2px solid var(--accent) !important;
+}
+.ui.button.primary:hover {
+    background: var(--bg-accent) !important;
+    color: var(--text-accent) !important;
+}
+.ui.button.primary svg {
+    fill: var(--accent) !important;
+}
+
+.ui.dropdown .menu, .ui.dropdown .item {
+    background: var(--bg-accent);
+}
+.ui.dropdown .menu {
+    border-radius: 4px 4px 0 0 !important;
+    border: none;
+}
+.ui.dropdown .header {
+    margin: 1rem 0 0 -0.25rem !important;
+}
+.ui.dropdown .menu > .item {
+    padding: 0.4rem !important;
+}
+
+.ui.dropdown .item:last-child {
+    border-radius: 0 0 4px 4px !important;
+}
+
+.ui.dropdown .menu > .item:hover {
+    background: var(--accent);
+}
+
+input {
+    background: var(--bg-accent) !important;
+    color: var(--text) !important;
+}
