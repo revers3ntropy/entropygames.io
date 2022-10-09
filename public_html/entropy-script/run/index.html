@@ -22,12 +22,12 @@
             node: false
         });
 
-        R.setDefaults({
+        ehy.setDefaults({
 	        esPlayGroundCode: "print('Hello World!');",
 	        esPlaygroundIterations: 10,
             esPlaygroundCompile: false
         }, true);
-        R.set({
+        ehy.set({
 	        esPlaygroundLogs: [],
 	        execute,
 	        perfTest
@@ -38,9 +38,9 @@
 	        theme: 'darcula'
         });
 
-		editor.doc.setValue(R.get('esPlayGroundCode'));
+		editor.doc.setValue(ehy.get('esPlayGroundCode'));
 		editor.on('change', e => {
-			R.set('esPlayGroundCode', e.doc.getValue(), true);
+			ehy.set('esPlayGroundCode', e.doc.getValue(), true);
 		});
     </script>
 </head>

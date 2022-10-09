@@ -1,4 +1,4 @@
-export const Dropdown = reservoir.Component('drop-down', ({
+export const Dropdown = hydrate.Component('drop-down', ({
 	title='',
 	icon='',
 	content,

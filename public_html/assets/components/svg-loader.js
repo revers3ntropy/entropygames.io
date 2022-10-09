@@ -1,4 +1,4 @@
-export const SvgLoader = reservoir.Component('svg-loader', async ({ id, href, width=50, height=50 }) => {
+export const SvgLoader = hydrate.Component('svg-loader', async ({ id, href, width=50, height=50 }) => {
 	return `
 		<style>
 			.svg-loader-svg-${id} svg {

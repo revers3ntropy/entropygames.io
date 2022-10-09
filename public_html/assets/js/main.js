@@ -3,7 +3,7 @@
 import '../../cdn/node_modules/entropy-hydrate/index.js';
 import '../../assets/lib/jquery/index.js';
 
-window.R = window.reservoir;
+window.ehy = window.hydrate;
 
 // Global constants and variables
 export const
@@ -16,6 +16,7 @@ export const
     NOTIFICATION_SHOW_TIME = 5000,
     ENVIRONMENTS = {
         'localhost': 'dev',
+        '127.0.0.1': 'dev',
         'entropygames.io': 'prod',
         'engine.entropygames.io': 'prod',
         'cdn.entropygames.io': 'prod',
@@ -87,7 +88,7 @@ import {
     showError,
     waitForReady
 } from "./dom.js";
-import { getSession, handleUserInfo, testApiCon, userInfo, signInAs, logout } from './auth.js';
+import { getSession, handleUserInfo, testApiCon, userInfo, logout } from './auth.js';
 import { rawAPI } from './backendAPI.js';
 import '../components/index.js';
 
@@ -153,8 +154,8 @@ export async function init({
 
     // after made sure that the user has the right permissions,
     // load the rest of the page
-    R.loadFromLocalStorage(false);
-    R.set({
+    ehy.loadFromLocalStorage(false);
+    ehy.set({
         rootPath: ROOT_PATH,
         user: state.userInfoJSON,
         signedIn: state.isSignedIn,
@@ -164,7 +165,7 @@ export async function init({
         theme: localStorage.getItem(LS_THEME),
         setTheme: (val) => {
             setTheme(val);
-            R.set({ theme: val });
+            ehy.set({ theme: val });
         }
     }, true);
 

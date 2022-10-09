@@ -91,7 +91,7 @@ export async function loadFooter($footer) {
     );
     state.$footer.innerHTML = await footerHTMLRes.text();
 
-    R.reload($footer);
+    ehy.reload($footer);
 }
 
 /**
@@ -105,7 +105,7 @@ export async function loadNav($nav) {
     const navRes = await fetch(`${core.ROOT_PATH}/assets/html/nav.html`);
     $nav.innerHTML = await navRes.text();
 
-    R.reload($nav);
+    ehy.reload($nav);
 }
 
 export function importCSS (...urls) {

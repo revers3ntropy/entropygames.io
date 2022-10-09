@@ -57,7 +57,7 @@ async function submitAction (create, username, password, cb) {
 	await navigate(cb);
 }
 
-export const SignInForm = reservoir.Component('sign-in-form', ({ id, cb }) => {
+export const SignInForm = hydrate.Component('sign-in-form', ({ id, cb }) => {
 
 	const state = randomString(randomInt(15, 25));
 	sessionStorage.setItem(SS_GITHUB_AUTH_STATE, state);
@@ -67,12 +67,12 @@ export const SignInForm = reservoir.Component('sign-in-form', ({ id, cb }) => {
 
 
 
-	R.set({
+	ehy.set({
 		[`SignInForm${id}_username`]: '',
 		[`SignInForm${id}_password`]: '',
 		[`SignInForm${id}_submit`]: async (create=false) => {
-			const username = R.get(`SignInForm${id}_username`);
-			const password = R.get(`SignInForm${id}_password`);
+			const username = ehy.get(`SignInForm${id}_username`);
+			const password = ehy.get(`SignInForm${id}_password`);
 			await submitAction(create, username, password, cb);
 		}
 	});

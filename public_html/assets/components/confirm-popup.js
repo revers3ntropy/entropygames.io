@@ -1,7 +1,7 @@
 import { escapeHTML } from '../js/main.js';
 import { hidePopup } from "./popup.js";
 
-export const ConfirmPopup = reservoir.Component('confirm-popup', ({
+export const ConfirmPopup = hydrate.Component('confirm-popup', ({
     message,
     allowHTML = false,
     title,
@@ -13,7 +13,7 @@ export const ConfirmPopup = reservoir.Component('confirm-popup', ({
         title = escapeHTML(title);
     }
 
-    R.set({
+    ehy.set({
         [`ConfirmPopup${id}_then`]: (value, id) => {
             hidePopup(id);
             then(value);

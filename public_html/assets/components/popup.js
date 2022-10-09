@@ -5,7 +5,7 @@ export function hidePopup(id) {
 	hidePopupFunctions[id]?.() || console.error(`hidePopup: none with id ${id}`);
 }
 
-export const Popup = reservoir.Component('pop-up', ({
+export const Popup = hydrate.Component('pop-up', ({
 	content,
 	id,
 	shown = true,
@@ -24,7 +24,7 @@ export const Popup = reservoir.Component('pop-up', ({
 	`;
 
 	document.body.appendChild($p);
-	R.reload($p);
+	ehy.reload($p);
 
 	function hide() {
 		$p.remove();

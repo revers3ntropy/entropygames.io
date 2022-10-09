@@ -131,7 +131,7 @@ export async function logout(ask = false) {
  */
 export async function logoutAction() {
     await localStorage.removeItem(core.LS_SESSION);
-    R.set({
+    ehy.set({
         'user': null,
         'signedIn': false
     },true);
