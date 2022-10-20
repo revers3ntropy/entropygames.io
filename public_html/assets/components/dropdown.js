@@ -13,7 +13,7 @@ export const Dropdown = hydrate.Component('drop-down', ({
 		}, 10);
 	});
 
-	return `
+	return hydrate.html`
 		<div class="ui inline dropdown">
 	        <div class="text">
 	            <i class='${icon} icon large'></i>

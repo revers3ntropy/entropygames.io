@@ -22,12 +22,12 @@
             node: false
         });
 
-        ehy.setDefaults({
+        hydrate.setDefaults({
 	        esPlayGroundCode: "print('Hello World!');",
 	        esPlaygroundIterations: 10,
             esPlaygroundCompile: false
         }, true);
-        ehy.set({
+        hydrate.set({
 	        esPlaygroundLogs: [],
 	        execute,
 	        perfTest
@@ -38,9 +38,9 @@
 	        theme: 'darcula'
         });
 
-		editor.doc.setValue(ehy.get('esPlayGroundCode'));
+		editor.doc.setValue(hydrate.get('esPlayGroundCode'));
 		editor.on('change', e => {
-			ehy.set('esPlayGroundCode', e.doc.getValue(), true);
+			hydrate.set('esPlayGroundCode', e.doc.getValue(), true);
 		});
     </script>
 </head>

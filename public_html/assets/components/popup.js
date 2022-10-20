@@ -24,7 +24,7 @@ export const Popup = hydrate.Component('pop-up', ({
 	`;
 
 	document.body.appendChild($p);
-	ehy.reload($p);
+	hydrate.reload($p);
 
 	function hide() {
 		$p.remove();

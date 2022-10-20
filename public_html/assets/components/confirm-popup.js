@@ -1,39 +1,29 @@
-import { escapeHTML } from '../js/main.js';
 import { hidePopup } from "./popup.js";
 
 export const ConfirmPopup = hydrate.Component('confirm-popup', ({
     message,
-    allowHTML = false,
     title,
     then = () => {},
-    id
 }) => {
-    if (!allowHTML) {
-        message = escapeHTML(message);
-        title = escapeHTML(title);
+    function clickCb (value, id) {
+        hidePopup(id);
+        then(value);
     }
 
-    ehy.set({
-        [`ConfirmPopup${id}_then`]: (value, id) => {
-            hidePopup(id);
-            then(value);
-        }
-    });
-
-    return `
+    return hydrate.html`
         <pop-up>
             <h2>${title}</h2>
             <p>${message}</p>
             <button
                 class='ui labeled icon button'
-                @click='ConfirmPopup${id}_then(false, popupid)'
+                @click='${clickCb}(false, popupid)'
             >
                 <i class='ui cross icon'></i>
                 Cancel
             </button>
             <button
                 class='ui labeled icon button primary'
-                @click='ConfirmPopup${id}_then(true, popupid)'
+                @click='${clickCb}(true, popupid)'
             >
                 <i class='ui check icon'></i>
                 Ok

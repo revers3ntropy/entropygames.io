@@ -65,19 +65,18 @@ export const SignInForm = hydrate.Component('sign-in-form', ({ id, cb }) => {
 	const clientID = GITHUB_AUTH_CLIENT_ID;
 	const redirect = `https://entropygames.io/auth/github-sign-in-redirect`;
 
-
-
-	ehy.set({
+	hydrate.set({
 		[`SignInForm${id}_username`]: '',
-		[`SignInForm${id}_password`]: '',
-		[`SignInForm${id}_submit`]: async (create=false) => {
-			const username = ehy.get(`SignInForm${id}_username`);
-			const password = ehy.get(`SignInForm${id}_password`);
-			await submitAction(create, username, password, cb);
-		}
+		[`SignInForm${id}_password`]: ''
 	});
 
-	return `
+	async function submit (create=false) {
+		const username = hydrate.get(`SignInForm${id}_username`);
+		const password = hydrate.get(`SignInForm${id}_password`);
+		await submitAction(create, username, password, cb);
+	}
+
+	return hydrate.html`
 		<div class="ui form">
 			<h2>Sign in to entropygames.io</h2>
 			<div class="field">
@@ -104,7 +103,7 @@ export const SignInForm = hydrate.Component('sign-in-form', ({ id, cb }) => {
 		        <button 
 					class="ui button icon labeled"
 					type="submit"
-					@click="SignInForm${id}_submit(true)"
+					@click="${submit}(true)"
 				>
 					<i class="plus icon"></i>
 					Create Account
@@ -112,7 +111,7 @@ export const SignInForm = hydrate.Component('sign-in-form', ({ id, cb }) => {
 				<button 
 					class="ui button icon labeled primary"
 					type="submit"
-					@click="SignInForm${id}_submit()"
+					@click="${submit}()"
 				>
 					<i class="right arrow icon"></i>
 					Sign In

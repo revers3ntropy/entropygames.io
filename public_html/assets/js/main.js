@@ -3,8 +3,6 @@
 import '../../cdn/node_modules/entropy-hydrate/index.js';
 import '../../assets/lib/jquery/index.js';
 
-window.ehy = window.hydrate;
-
 // Global constants and variables
 export const
     LS_THEME = 'theme',
@@ -154,8 +152,8 @@ export async function init({
 
     // after made sure that the user has the right permissions,
     // load the rest of the page
-    ehy.loadFromLocalStorage(false);
-    ehy.set({
+    hydrate.loadFromLocalStorage(false);
+    hydrate.set({
         rootPath: ROOT_PATH,
         user: state.userInfoJSON,
         signedIn: state.isSignedIn,
@@ -165,7 +163,7 @@ export async function init({
         theme: localStorage.getItem(LS_THEME),
         setTheme: (val) => {
             setTheme(val);
-            ehy.set({ theme: val });
+            hydrate.set({ theme: val });
         }
     }, true);
 

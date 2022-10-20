@@ -1,21 +1,21 @@
 export function outputFunc (m) {
-	ehy.update('esPlaygroundLogs', logs => [m, ...logs]);
+	hydrate.update('esPlaygroundLogs', logs => [m, ...logs]);
 }
 
 export async function execute () {
-	ehy.set({ esPlaygroundLogs: [] });
+	hydrate.set({ esPlaygroundLogs: [] });
 
-	if (!!ehy.get('esPlaygroundCompile')) {
+	if (!!hydrate.get('esPlaygroundCompile')) {
 		outputFunc('Open the dev tools console to see output');
 	}
 
 	const env = new es.Context();
 	env.parent = es.global;
 
-	const res = es.run(ehy.get('esPlayGroundCode'), {
+	const res = es.run(hydrate.get('esPlayGroundCode'), {
 		measurePerformance: true,
 		env,
-		compileToJS: !!ehy.get('esPlaygroundCompile')
+		compileToJS: !!hydrate.get('esPlaygroundCompile')
 	})
 	if (res.error) {
 		outputFunc(res.error.str);
@@ -23,10 +23,10 @@ export async function execute () {
 }
 
 export function perfTest () {
-	ehy.set({ esPlaygroundLogs: [] });
+	hydrate.set({ esPlaygroundLogs: [] });
 	console.log('running');
 
-	const nIterations = parseInt(ehy.get('esPlaygroundIterations'));
+	const nIterations = parseInt(hydrate.get('esPlaygroundIterations'));
 	if (isNaN(nIterations)) {
 		outputFunc('Invalid number of iterations');
 		return;
@@ -43,10 +43,10 @@ export function perfTest () {
 		const env = new es.Context();
 		env.parent = es.global;
 
-		let res = es.run(ehy.get('esPlayGroundCode'), {
+		let res = es.run(hydrate.get('esPlayGroundCode'), {
 			env,
 			measurePerformance: true,
-			compileToJS: !!ehy.get('esPlaygroundCompile')
+			compileToJS: !!hydrate.get('esPlaygroundCompile')
 		});
 
 		if (res.error) {
